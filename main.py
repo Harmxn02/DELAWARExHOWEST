@@ -51,7 +51,7 @@ def ask_openai(question, context):
         {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {question}"}
     ]
 
-    data = {"messages": messages, "max_tokens": 150, "temperature": 0.7}
+    data = {"messages": messages, "max_tokens": 750, "temperature": 0.7}
 
     response = requests.post(config.OPENAI_ENDPOINT, headers=headers, json=data)
 
@@ -77,16 +77,75 @@ def ask_openai(question, context):
 
 # Main execution
 if __name__ == "__main__":
-    pdf_url = "https://harmansinghstorage.blob.core.windows.net/pdf-files/AI-Driven_Project_Estimation_and_Team_Planning_Platform.pdf"
+    pdf_url = "https://harmansinghstorage.blob.core.windows.net/pdf-files/Self-made_Sample_Project_Outline.pdf"
     extracted_text = analyze_pdf(pdf_url)
 
     if extracted_text:
         user_question = """
-            What is the project about? Answer the question in a few sentences, using JSON, in this format:
+            Your role is to analyze the project outline document for each task to estimate man-days, suggest fitting roles, and outline potential issues.
+
+            Limit yourself to 3 tasks for now.
+
+            Please generate detailed estimations in JSON format as shown below. Follow these guidelines:
+
+            1. **Task Description**: Summarize the task in a detailed sentence or two.
+            2. **Fitting Employees**: Recommend appropriate roles (like "Backend Developer," "UI Designer," "Project Manager") and estimate the number of employees required for each task.
+            3. **Estimated Days**: Provide three estimates for the duration of each task:
+                - "min": Minimum number of days if everything goes smoothly.
+                - "most likely": Average or most likely number of days required.
+                - "max": Maximum number of days if there are delays or added complexity.
+            4. **Potential Issues**: List potential risks or issues that might arise, such as “security concerns,” “data compliance requirements,” or “scope changes.”
+
+            Return the response in this JSON structure:
+            
+            ```json
             {
-                "project": "Project Name",              // Name of the project
-                "description": "Project Description"    // Long string, describing the project
+                "list_of_all_tasks": {
+                    "task 1": {
+                        "description": "Task Description",
+                        "fitting_employees": [
+                            {
+                                "role": "Role Name",
+                                "count": 2
+                            }
+                        ],
+                        "estimated_days": {
+                            "min": 5,
+                            "most likely": 6,
+                            "max": 7
+                        },
+                        "potential_issues": [
+                            "Issue 1",
+                            "Issue 2",
+                            "Issue 3"
+                        ]
+                    },
+                    "task 2": {
+                        "description": "Another Task Description",
+                        "fitting_employees": [
+                            {
+                                "role": "Another Role",
+                                "count": 1
+                            }
+                        ],
+                        "estimated_days": {
+                            "min": 2,
+                            "most likely": 4,
+                            "max": 6
+                        },
+                        "potential_issues": [
+                            "Issue A",
+                            "Issue B"
+                        ]
+                    }
+                    // Additional tasks follow
+                }
             }
+            ```
         """  # Example question
         answer = ask_openai(user_question, extracted_text)
         print("Answer:", answer)
+
+        # Save the answer to a JSON file
+        with open("answer.json", "w") as f:
+            f.write(answer)
