@@ -22,9 +22,6 @@ def analyze_pdf(pdf_url):
             )
             result_json = result_response.json()
 
-            # Debugging output to understand the response structure
-            # print("Response from Document Intelligence:", result_json)
-
             if result_json["status"] in ["succeeded", "failed"]:
                 break
             time.sleep(1)
@@ -36,7 +33,6 @@ def analyze_pdf(pdf_url):
                 and "content" in result_json["analyzeResult"]
             ):
                 extracted_text = result_json["analyzeResult"]["content"]
-                # print("Extracted Text:\n", extracted_text)  # Print the extracted text
                 return extracted_text
             else:
                 print("No content found in the response.")
@@ -85,7 +81,6 @@ if __name__ == "__main__":
     extracted_text = analyze_pdf(pdf_url)
 
     if extracted_text:
-        # print("Extracted Text:\n", extracted_text)  # Show the full extracted text
         user_question = """
             What is the project about? Answer the question in a few sentences, using JSON, in this format:
             {
