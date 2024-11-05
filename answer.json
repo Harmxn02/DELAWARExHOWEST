@@ -1,0 +1,63 @@
+{
+    "list_of_all_tasks": {
+        "task 1": {
+            "description": "Design a responsive UI that provides a seamless experience across devices (desktop, tablet, mobile).",
+            "fitting_employees": [
+                {
+                    "role": "UI Designer",
+                    "count": 2
+                }
+            ],
+            "estimated_days": {
+                "min": 10,
+                "most likely": 15,
+                "max": 20
+            },
+            "potential_issues": [
+                "Cross-browser compatibility",
+                "Accessibility compliance"
+            ]
+        },
+        "task 2": {
+            "description": "Develop a relational database to store property listings, user profiles, and interactions.",
+            "fitting_employees": [
+                {
+                    "role": "Database Developer",
+                    "count": 1
+                },
+                {
+                    "role": "Backend Developer",
+                    "count": 1
+                }
+            ],
+            "estimated_days": {
+                "min": 20,
+                "most likely": 30,
+                "max": 40
+            },
+            "potential_issues": [
+                "Data migration from existing system",
+                "Database performance optimization"
+            ]
+        },
+        "task 3": {
+            "description": "Build REST APIs for accessing and updating property listings, user profiles, and appointment details.",
+            "fitting_employees": [
+                {
+                    "role": "Backend Developer",
+                    "count": 2
+                }
+            ],
+            "estimated_days": {
+                "min": 15,
+                "most likely": 20,
+                "max": 25
+            },
+            "potential_issues": [
+                "API security",
+                "API documentation"
+            ]
+        }
+        // Additional tasks follow
+    }
+}
