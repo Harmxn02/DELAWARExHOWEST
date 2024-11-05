@@ -69,6 +69,7 @@ async function askOpenAI(question, context) {
 }
 
 // Main execution
+// Using a PDF file
 document.getElementById('analyzeButton').addEventListener('click', async () => {
     const pdfUrl = "https://harmansinghstorage.blob.core.windows.net/pdf-files/AI-Driven_Project_Estimation_and_Team_Planning_Platform.pdf";
     const extractedText = await analyzePdf(pdfUrl);
@@ -87,4 +88,43 @@ document.getElementById('analyzeButton').addEventListener('click', async () => {
     } else {
         document.getElementById('result').innerText = "Failed to extract text from PDF.";
     }
+});
+
+// Using a CSV file
+document.getElementById('analyzeCsvButton').addEventListener('click', async () => {
+    const fileInput = document.getElementById('csvInput');
+    if (fileInput.files.length === 0) {
+        alert("Selecteer een CSV-bestand.");
+        return;
+    }
+
+    const file = fileInput.files[0];
+    const csvContent = await file.text();
+
+    // Function to parse CSV to JSON
+    function parseCsv(csv) {
+        const lines = csv.trim().split("\n");
+        const headers = lines[0].split(",");
+        const data = lines.slice(1).map(line => {
+            const values = line.split(",");
+            return headers.reduce((obj, header, i) => {
+                obj[header.trim()] = values[i].trim();
+                return obj;
+            }, {});
+        });
+        return data;
+    }
+
+    const csvData = parseCsv(csvContent);
+
+    // Ask the LLM
+    const userQuestion = `
+        Wat zijn de belangrijkste inzichten van dit CSV-bestand? Geef een samenvatting in JSON-formaat zoals:
+        {
+            "key_points": ["Belangrijk punt 1", "Belangrijk punt 2", ...]
+        }
+    `;
+
+    const answer = await askOpenAI(userQuestion, JSON.stringify(csvData));
+    document.getElementById('result').innerText = "Answer:\n" + answer;
 });
