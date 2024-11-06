@@ -1,5 +1,12 @@
+# Ignore config files
 config.py
 javascript/config.js
+
+# Ignore Python cache files
 __pycache__/
 *.pyc
 __pycache__/config.cpython-312.pyc
+
+# Ignore Pipenv files
+Pipfile
+Pipfile.lock
