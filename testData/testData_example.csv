@@ -1,0 +1,4 @@
+Task;Description;Fitting Employees (Role and Count);Estimated Days (Min);Estimated Days (Most Likely);Estimated Days (Max);Potential Issues
+task 1;Design a responsive UI that provides a seamless experience across devices (desktop, tablet, mobile).;UI Designer: 2;10;;20;Cross-browser compatibility; Accessibility compliance
+task 2;Develop a relational database to store property listings, user profiles, and interactions.;Database Developer: 1; Backend Developer: 1;20;;40;Data migration from existing system; Database performance optimization
+task 3;Build REST APIs for accessing and updating property listings, user profiles, and appointment details.;Backend Developer: 2;15;20;25;API security; API documentation
