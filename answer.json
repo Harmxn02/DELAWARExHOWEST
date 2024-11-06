@@ -1,72 +1,60 @@
 {
     "list_of_all_tasks": {
         "task 1": {
-            "description": "Design and implement the frontend user interface with responsive design, property listings, search and filter functionality, user authentication, user profiles, and contact and messaging system.",
+            "description": "Design a responsive UI that provides a seamless experience across devices (desktop, tablet, mobile)",
             "fitting_employees": [
                 {
                     "role": "UI Designer",
-                    "count": 1
-                },
-                {
-                    "role": "Frontend Developer",
                     "count": 2
                 }
             ],
             "estimated_days": {
-                "min": 20,
-                "most likely": 30,
-                "max": 40
+                "min": 5,
+                "most_likely": 7,
+                "max": 10
             },
             "potential_issues": [
-                "Design changes",
-                "Integration issues with backend",
-                "Cross-device compatibility"
+                "Cross-browser compatibility issues",
+                "UI/UX challenges for mobile devices",
+                "Scope changes due to design iterations"
             ]
         },
         "task 2": {
-            "description": "Develop the backend and database with database management, data import and export, APIs for data access, and user roles and permissions.",
+            "description": "Develop a relational database to store property listings, user profiles, and interactions",
             "fitting_employees": [
                 {
-                    "role": "Backend Developer",
+                    "role": "Database Developer",
                     "count": 2
-                },
-                {
-                    "role": "Database Administrator",
-                    "count": 1
                 }
             ],
             "estimated_days": {
-                "min": 25,
-                "most likely": 35,
-                "max": 45
+                "min": 10,
+                "most_likely": 14,
+                "max": 20
             },
             "potential_issues": [
-                "Data migration from legacy system",
-                "API integration with frontend",
-                "Database scalability"
+                "Data migration challenges from legacy systems",
+                "Data compliance requirements",
+                "Data security concerns"
             ]
         },
         "task 3": {
-            "description": "Build the appointment scheduling system with calendar integration, appointment management for agents, and automated reminders.",
+            "description": "Build REST APIs for accessing and updating property listings, user profiles, and appointment details",
             "fitting_employees": [
                 {
                     "role": "Backend Developer",
-                    "count": 1
-                },
-                {
-                    "role": "UI Designer",
-                    "count": 1
+                    "count": 3
                 }
             ],
             "estimated_days": {
                 "min": 15,
-                "most likely": 20,
-                "max": 25
+                "most_likely": 20,
+                "max": 30
             },
             "potential_issues": [
-                "Calendar integration issues",
-                "Automated reminder system errors",
-                "User experience design"
+                "Integration challenges with third-party systems",
+                "API security vulnerabilities",
+                "Scope changes due to API design iterations"
             ]
         }
     }
