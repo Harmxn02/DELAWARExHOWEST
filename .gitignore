@@ -1,3 +1,5 @@
 config.py
 javascript/config.js
 __pycache__/
+*.pyc
+__pycache__/config.cpython-312.pyc
