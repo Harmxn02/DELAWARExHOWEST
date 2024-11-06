@@ -68,9 +68,7 @@ async function askOpenAI(question, context) {
     }
 }
 
-// TODO: put main execution in #region
-
-// Main execution
+//#region Main execution
 // Using a PDF file
 document.getElementById('analyzeButton').addEventListener('click', async () => {
     const pdfUrl = "https://harmansinghstorage.blob.core.windows.net/pdf-files/AI-Driven_Project_Estimation_and_Team_Planning_Platform.pdf";
@@ -130,6 +128,8 @@ document.getElementById('analyzeCsvButton').addEventListener('click', async () =
     const answer = await askOpenAI(userQuestion, JSON.stringify(csvData));
     document.getElementById('result').innerText = "Answer:\n" + answer;
 });
+
+//#endregion
 
 //#region CSV generator
 
