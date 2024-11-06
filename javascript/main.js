@@ -68,6 +68,8 @@ async function askOpenAI(question, context) {
     }
 }
 
+// TODO: put main execution in #region
+
 // Main execution
 // Using a PDF file
 document.getElementById('analyzeButton').addEventListener('click', async () => {
@@ -128,3 +130,71 @@ document.getElementById('analyzeCsvButton').addEventListener('click', async () =
     const answer = await askOpenAI(userQuestion, JSON.stringify(csvData));
     document.getElementById('result').innerText = "Answer:\n" + answer;
 });
+
+//#region CSV generator
+
+// Function to convert JSON data to CSV format
+function jsonToCsv(json) {
+    const tasks = json.list_of_all_tasks;
+    const rows = [["Task", "Description", "Fitting Employees (Role and Count)", "Estimated Days (Min)", "Estimated Days (Most Likely)", "Estimated Days (Max)", "Potential Issues"]];
+
+    Object.entries(tasks).forEach(([taskName, taskData]) => {
+        const description = taskData.description;
+
+        // Convert fitting employees to a JSON-like string representation
+        const fittingEmployees = `"${taskData.fitting_employees
+            .map(employee => `${employee.role}: ${employee.count}`)
+            .join("\n")}"`;
+
+        const { min, most_likely, max } = taskData.estimated_days;
+
+        // Convert potential issues to a JSON-like string representation
+        const potentialIssues = `"${taskData.potential_issues
+            .map(issue => issue)
+            .join("\n")}"`;
+
+        // Add row for each task
+        rows.push([taskName, description, fittingEmployees, min, most_likely, max, potentialIssues]);
+    });
+
+    // Join rows with newline characters and comma-separated values for each row
+    return rows.map(row => row.join(";")).join("\n");
+}
+
+// Function to download the CSV file
+function downloadCsv(data, filename) {
+    const blob = new Blob([data], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+
+    // Create a temporary link to download the file
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+
+    // Cleanup after download
+    setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }, 0);
+}
+
+// Button click event to generate and download CSV
+document.getElementById('generateCsvButton').addEventListener('click', async () => {
+    try {
+        // Fetch the JSON data from answer.json
+        const response = await fetch('/answer.json');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const jsonData = await response.json();
+
+        const csvData = jsonToCsv(jsonData);
+        downloadCsv(csvData, "example.csv");
+    } catch (error) {
+        console.error("Error fetching JSON data:", error);
+    }
+});
+
+//#endregion
