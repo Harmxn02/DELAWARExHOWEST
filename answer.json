@@ -1,60 +1,65 @@
 {
     "list_of_all_tasks": {
         "task 1": {
-            "description": "Design a responsive UI that provides a seamless experience across devices (desktop, tablet, mobile)",
+            "description": "Design and develop frontend UI for the real estate listing platform, including property listings, search and filter functionality, user authentication, user profiles, and messaging system.",
             "fitting_employees": [
                 {
                     "role": "UI Designer",
-                    "count": 2
-                }
-            ],
-            "estimated_days": {
-                "min": 5,
-                "most_likely": 7,
-                "max": 10
-            },
-            "potential_issues": [
-                "Cross-browser compatibility issues",
-                "UI/UX challenges for mobile devices",
-                "Scope changes due to design iterations"
-            ]
-        },
-        "task 2": {
-            "description": "Develop a relational database to store property listings, user profiles, and interactions",
-            "fitting_employees": [
+                    "count": 1
+                },
                 {
-                    "role": "Database Developer",
+                    "role": "Frontend Developer",
                     "count": 2
                 }
             ],
             "estimated_days": {
                 "min": 10,
-                "most_likely": 14,
+                "most_likely": 15,
                 "max": 20
             },
             "potential_issues": [
-                "Data migration challenges from legacy systems",
-                "Data compliance requirements",
-                "Data security concerns"
+                "Compatibility issues across multiple devices and browsers",
+                "User authentication and security concerns"
             ]
         },
-        "task 3": {
-            "description": "Build REST APIs for accessing and updating property listings, user profiles, and appointment details",
+        "task 2": {
+            "description": "Develop backend and database to store property listings, user profiles, and appointment details, including data import/export functionalities and REST APIs for accessing and updating data.",
             "fitting_employees": [
                 {
                     "role": "Backend Developer",
-                    "count": 3
+                    "count": 2
                 }
             ],
             "estimated_days": {
-                "min": 15,
-                "most_likely": 20,
+                "min": 20,
+                "most_likely": 25,
                 "max": 30
             },
             "potential_issues": [
-                "Integration challenges with third-party systems",
-                "API security vulnerabilities",
-                "Scope changes due to API design iterations"
+                "Data compliance requirements",
+                "Integration with third-party APIs"
+            ]
+        },
+        "task 3": {
+            "description": "Build an appointment scheduling system with calendar integration, appointment management for agents, and automated reminders for users.",
+            "fitting_employees": [
+                {
+                    "role": "Backend Developer",
+                    "count": 1
+                },
+                {
+                    "role": "Frontend Developer",
+                    "count": 1
+                }
+            ],
+            "estimated_days": {
+                "min": 10,
+                "most_likely": 12,
+                "max": 15
+            },
+            "potential_issues": [
+                "Integration with existing backend and frontend systems",
+                "User experience and usability concerns"
             ]
         }
     }
