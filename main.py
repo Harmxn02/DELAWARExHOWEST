@@ -165,7 +165,7 @@ def select_pdf():
                             ],
                             "estimated_days": {
                                 "min": 5,
-                                "most likely": 6,
+                                "most_likely": 6,
                                 "max": 7
                             },
                             "potential_issues": [
@@ -184,7 +184,7 @@ def select_pdf():
                             ],
                             "estimated_days": {
                                 "min": 2,
-                                "most likely": 4,
+                                "most_likely": 4,
                                 "max": 6
                             },
                             "potential_issues": [
