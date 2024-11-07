@@ -119,9 +119,63 @@ document.getElementById('analyzeCsvButton').addEventListener('click', async () =
 
     // Ask the LLM
     const userQuestion = `
-        Wat zijn de belangrijkste inzichten van dit CSV-bestand? Geef een samenvatting in JSON-formaat zoals:
+        Your role is to analyze the project outline document for each task to estimate man-days, suggest fitting roles, and outline potential issues.
+
+        Limit yourself to 3 tasks for now.
+
+        Please generate detailed estimations in JSON format as shown below. Follow these guidelines, and don't include comments in the JSON structure:
+
+        1. **Task Description**: Summarize the task in a detailed sentence or two.
+        2. **Fitting Employees**: Recommend appropriate roles (like "Backend Developer," "UI Designer," "Project Manager") and estimate the number of employees required for each task.
+        3. **Estimated Days**: Provide three estimates for the duration of each task:
+            - "min": Minimum number of days if everything goes smoothly.
+            - "most likely": Average or most likely number of days required.
+            - "max": Maximum number of days if there are delays or added complexity.
+        4. **Potential Issues**: List potential risks or issues that might arise, such as “security concerns,” “data compliance requirements,” or “scope changes.”
+
+        Return the response in this JSON structure:
+
         {
-            "key_points": ["Belangrijk punt 1", "Belangrijk punt 2", ...]
+            "list_of_all_tasks": {
+                "task 1": {
+                    "description": "Task Description",
+                    "fitting_employees": [
+                        {
+                            "role": "Role Name",
+                            "count": 2
+                        }
+                    ],
+                    "estimated_days": {
+                        "min": 5,
+                        "most_likely": 6,
+                        "max": 7
+                    },
+                    "potential_issues": [
+                        "Issue 1",
+                        "Issue 2",
+                        "Issue 3"
+                    ]
+                },
+                "task 2": {
+                    "description": "Another Task Description",
+                    "fitting_employees": [
+                        {
+                            "role": "Another Role",
+                            "count": 1
+                        }
+                    ],
+                    "estimated_days": {
+                        "min": 2,
+                        "most_likely": 4,
+                        "max": 6
+                    },
+                    "potential_issues": [
+                        "Issue A",
+                        "Issue B"
+                    ]
+                }
+                // Additional tasks follow
+            }
         }
     `;
 
@@ -132,7 +186,6 @@ document.getElementById('analyzeCsvButton').addEventListener('click', async () =
 //#endregion
 
 //#region CSV generator
-
 // Function to convert JSON data to CSV format
 function jsonToCsv(json) {
     const tasks = json.list_of_all_tasks;
