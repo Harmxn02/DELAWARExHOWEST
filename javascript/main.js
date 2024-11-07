@@ -50,7 +50,7 @@ async function askOpenAI(question, context) {
         { role: "user", content: `Context:\n${context}\n\nQuestion: ${question}` }
     ];
 
-    const data = JSON.stringify({ messages: messages, max_tokens: 150, temperature: 0.7 });
+    const data = JSON.stringify({ messages: messages, max_tokens: 750, temperature: 0.7 });
 
     try {
         const response = await fetch(config.OPENAI_ENDPOINT, { method: 'POST', headers: headers, body: data });
@@ -204,7 +204,7 @@ function jsonToCsv(json) {
         // Convert potential issues to a JSON-like string representation
         const potentialIssues = `"${taskData.potential_issues
             .map(issue => issue)
-            .join("\n")}"`;
+            .join(",\n")}"`;
 
         // Add row for each task
         rows.push([taskName, description, fittingEmployees, min, most_likely, max, potentialIssues]);
