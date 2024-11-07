@@ -1,0 +1,9 @@
+Task;Description;Fitting Employees (Role and Count);Estimated Days (Min);Estimated Days (Most Likely);Estimated Days (Max);Potential Issues
+task 1;Design and develop frontend UI for the real estate listing platform, including property listings, search and filter functionality, user authentication, user profiles, and messaging system.;"UI Designer: 1
+Frontend Developer: 2";10;15;20;"Compatibility issues across multiple devices and browsers
+User authentication and security concerns"
+task 2;Develop backend and database to store property listings, user profiles, and appointment details, including data import/export functionalities and REST APIs for accessing and updating data.;"Backend Developer: 2";20;25;30;"Data compliance requirements
+Integration with third-party APIs"
+task 3;Build an appointment scheduling system with calendar integration, appointment management for agents, and automated reminders for users.;"Backend Developer: 1
+Frontend Developer: 1";10;12;15;"Integration with existing backend and frontend systems
+User experience and usability concerns"
