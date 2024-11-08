@@ -10,3 +10,6 @@ __pycache__/config.cpython-312.pyc
 # Ignore Pipenv files
 Pipfile
 Pipfile.lock
+
+# Ignore files in Harman's trashcan
+trashcan/

@@ -95,7 +95,7 @@ def ask_openai(question, context):
         {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {question}"}
     ]
 
-    data = {"messages": messages, "max_tokens": 750, "temperature": 0.7}
+    data = {"messages": messages, "max_tokens": 2000, "temperature": 0.7}
 
     response = requests.post(config.OPENAI_ENDPOINT, headers=headers, json=data)
 
@@ -136,71 +136,60 @@ def select_pdf():
 
         if extracted_text:
             user_question = """
-                Your role is to analyze the project outline document for each task to estimate man-days, suggest fitting roles, and outline potential issues.
+                Your role is to analyze the project outline document, and for each task to estimate man-days, suggest fitting roles, and outline potential issues.
 
-                Limit yourself to 3 tasks for now.
+                Limit yourself to 10 detailed tasks for now. The tasks should be 1 specific task in the project. For example "Create the login screen for the web-app", and not "Frontend development".
 
                 Please generate detailed estimations in JSON format as shown below. Follow these guidelines, and don't include comments in the JSON structure:
 
-                1. **Task Description**: Summarize the task in a detailed sentence or two.
-                2. **Fitting Employees**: Recommend appropriate roles (like "Backend Developer," "UI Designer," "Project Manager") and estimate the number of employees required for each task.
-                3. **Estimated Days**: Provide three estimates for the duration of each task:
-                    - "min": Minimum number of days if everything goes smoothly.
-                    - "most likely": Average or most likely number of days required.
-                    - "max": Maximum number of days if there are delays or added complexity.
-                4. **Potential Issues**: List potential risks or issues that might arise, such as “security concerns,” “data compliance requirements,” or “scope changes.”
+
+                1. **MSCW**: The priority of the task. The options are: "1 Must Have", "2 Should Have", "3 Could Have"
+                2. **Area**: The area of the project where the task belongs. The options are: "01 Analyze & Design", "03 Setup", "04 Development"
+                3. **Module**: The software engineering domain of the task. The options are: "Overall", "Frontend", "Middleware", "Infra", "IoT", "Security"
+                4. **Feature**: What exactly is being done in the task. The options are: "General", "Technical Lead", "Project Manager", "Sprint Artifacts & Meetings", "Technical Analysis", "Functional Analysis", "User Experience (UX)", "User Interface (UI)", "Security Review", "Go-Live support", "Setup Environment + Azure", "Setup Projects", "Authentication & Authorizations", "Monitoring", "Notifications", "Settings" , "Filtering / search"
+                5. **Task**: Summarize the task in a detailed sentence or two.
+                6. **Profile**: The role of the person who will perform the task. The options are: "0 Blended FE dev", "0 Blended MW dev", "0 Blended Overall dev, 0 Blended XR dev", "1 Analyst", "2 Consultant Technical", "3 Senior Consultant Technical", "4 Lead Expert", "5 Manager", "6 Senior Manager", "7 DPH Consultant Technical", "8 DPH Senior Consultant Technical", "9 DPH Lead Expert/Manager"
+                7. **MinDays**: The estimated minimum number of days required to complete the task.
+                8. **RealDays**: The average or most likely number of days required to complete the task.
+                9. **MaxDays**: The estimated maximum number of days required to complete the task.
+                10. **Contingency**: for this write "I don't know what this feature means -HS"
+                11. **EstimatedDays**: this is a formula that calculates the estimated days based on the MinDays, RealDays, and MaxDays. The formula is: (MinDays + (4 * RealDays) + (4 * MaxDays)) / 9. Make sure to round up to the nearest whole number.
+                12. **EstimatedPrice**: this is a formula that calculates the estimated price based on the EstimatedDays and the cost of the Profile. For now use 200 as the cost per day. The formula is: EstimatedDays * 200.
+                13. **Potential Issues**: List potential risks or issues that might arise, such as “security concerns,” “data compliance requirements,” or “scope changes.”
 
                 Return the response in this JSON structure:
                 
                 ```json
                 {
-                    "list_of_all_tasks": {
-                        "task 1": {
-                            "description": "Task Description",
-                            "fitting_employees": [
-                                {
-                                    "role": "Role Name",
-                                    "count": 2
-                                }
-                            ],
-                            "estimated_days": {
-                                "min": 5,
-                                "most_likely": 6,
-                                "max": 7
-                            },
+                    "list_of_all_tasks": [
+                        {
+                            "MSCW": "1 Must Have",
+                            "Area": "01 Analyze & Design",
+                            "Module": "Overall",
+                            "Feature": "General",
+                            "Task": "Task 1 description",
+                            "Profile": "1 Analyst",
+                            "MinDays": 1,
+                            "RealDays": 2,
+                            "MaxDays": 3,
+                            "Contingency": "I don't know what this feature means -HS",
+                            "EstimatedDays": 3,
+                            "EstimatedPrice": 600,
                             "potential_issues": [
                                 "Issue 1",
                                 "Issue 2",
                                 "Issue 3"
                             ]
                         },
-                        "task 2": {
-                            "description": "Another Task Description",
-                            "fitting_employees": [
-                                {
-                                    "role": "Another Role",
-                                    "count": 1
-                                }
-                            ],
-                            "estimated_days": {
-                                "min": 2,
-                                "most_likely": 4,
-                                "max": 6
-                            },
-                            "potential_issues": [
-                                "Issue A",
-                                "Issue B"
-                            ]
-                        }
                         // Additional tasks follow
-                    }
+                    ]    
                 }
                 ```
-            """  # Example question
+            """
             answer = ask_openai(user_question, extracted_text)
 
             if answer:
-                with open("answer.json", "w") as f:
+                with open("response.json", "w") as f:
                     f.write(answer)
                 messagebox.showinfo("Success", "Analysis completed and saved as answer.json!")
             else:

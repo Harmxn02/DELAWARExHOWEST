@@ -1,0 +1,194 @@
+{
+    "list_of_all_tasks": [
+        {
+            "MSCW": "1 Must Have",
+            "Area": "01 Analyze & Design",
+            "Module": "Overall",
+            "Feature": "General",
+            "Task": "Define project scope and requirements",
+            "Profile": "1 Analyst",
+            "MinDays": 5,
+            "RealDays": 8,
+            "MaxDays": 12,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 10,
+            "EstimatedPrice": 2000,
+            "potential_issues": [
+                "Scope creep",
+                "Lack of clarity from client",
+                "Budget constraints"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "01 Analyze & Design",
+            "Module": "Overall",
+            "Feature": "Technical Analysis",
+            "Task": "Choose technology stack and architecture",
+            "Profile": "2 Consultant Technical",
+            "MinDays": 5,
+            "RealDays": 8,
+            "MaxDays": 12,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 10,
+            "EstimatedPrice": 2000,
+            "potential_issues": [
+                "Compatibility issues with existing systems",
+                "Limited scalability",
+                "Security vulnerabilities"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "03 Setup",
+            "Module": "Infra",
+            "Feature": "Setup Environment + Azure",
+            "Task": "Provision Azure infrastructure and set up development, testing, and production environments",
+            "Profile": "0 Blended Overall dev",
+            "MinDays": 5,
+            "RealDays": 8,
+            "MaxDays": 12,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 10,
+            "EstimatedPrice": 2000,
+            "potential_issues": [
+                "Configuration errors",
+                "Delayed setup from third-party providers",
+                "Limited availability of resources"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "04 Development",
+            "Module": "Frontend",
+            "Feature": "User Interface (UI)",
+            "Task": "Design and implement responsive UI for property listings and search",
+            "Profile": "0 Blended FE dev",
+            "MinDays": 10,
+            "RealDays": 15,
+            "MaxDays": 20,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 20,
+            "EstimatedPrice": 4000,
+            "potential_issues": [
+                "Cross-browser compatibility issues",
+                "Performance optimization for large search results",
+                "Accessibility compliance"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "04 Development",
+            "Module": "Frontend",
+            "Feature": "User Interface (UI)",
+            "Task": "Implement secure user authentication and profile management",
+            "Profile": "0 Blended FE dev",
+            "MinDays": 10,
+            "RealDays": 15,
+            "MaxDays": 20,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 20,
+            "EstimatedPrice": 4000,
+            "potential_issues": [
+                "Authentication vulnerabilities",
+                "User experience for forgotten passwords and account recovery",
+                "Integration with backend APIs"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "04 Development",
+            "Module": "Middleware",
+            "Feature": "Authentication & Authorizations",
+            "Task": "Develop and test RESTful APIs for property listings and user interactions",
+            "Profile": "0 Blended MW dev",
+            "MinDays": 15,
+            "RealDays": 20,
+            "MaxDays": 25,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 30,
+            "EstimatedPrice": 6000,
+            "potential_issues": [
+                "API security vulnerabilities",
+                "API versioning and backward compatibility",
+                "Integration with database and middleware"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "04 Development",
+            "Module": "Middleware",
+            "Feature": "Filtering / search",
+            "Task": "Implement search and filter functionality for property listings",
+            "Profile": "0 Blended MW dev",
+            "MinDays": 15,
+            "RealDays": 20,
+            "MaxDays": 25,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 30,
+            "EstimatedPrice": 6000,
+            "potential_issues": [
+                "Performance optimization for large search results",
+                "Complex search logic",
+                "Integration with frontend UI"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "04 Development",
+            "Module": "Middleware",
+            "Feature": "Notifications",
+            "Task": "Develop and test notification and alert system for users and admins",
+            "Profile": "0 Blended MW dev",
+            "MinDays": 10,
+            "RealDays": 15,
+            "MaxDays": 20,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 20,
+            "EstimatedPrice": 4000,
+            "potential_issues": [
+                "Integration with third-party notification services",
+                "User preferences and settings for notifications",
+                "Security vulnerabilities"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "04 Development",
+            "Module": "Middleware",
+            "Feature": "Appointment Scheduling System",
+            "Task": "Integrate calendar and appointment scheduling system for agents and users",
+            "Profile": "0 Blended MW dev",
+            "MinDays": 20,
+            "RealDays": 25,
+            "MaxDays": 30,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 38,
+            "EstimatedPrice": 7600,
+            "potential_issues": [
+                "Integration with calendar APIs",
+                "User experience and flow for scheduling and confirming appointments",
+                "Security vulnerabilities"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "04 Development",
+            "Module": "Middleware",
+            "Feature": "Admin Dashboard",
+            "Task": "Develop and test admin dashboard for listing and user management, analytics, and reporting",
+            "Profile": "0 Blended MW dev",
+            "MinDays": 30,
+            "RealDays": 35,
+            "MaxDays": 40,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 48,
+            "EstimatedPrice": 9600,
+            "potential_issues": [
+                "Integration with database and middleware",
+                "Data visualization and dashboard design",
+                "Security vulnerabilities"
+            ]
+        }
+    ]
+}
