@@ -4,38 +4,17 @@
             "MSCW": "1 Must Have",
             "Area": "01 Analyze & Design",
             "Module": "Overall",
-            "Feature": "General",
-            "Task": "Define project scope and requirements",
-            "Profile": "1 Analyst",
-            "MinDays": 5,
-            "RealDays": 8,
-            "MaxDays": 12,
-            "Contingency": "I don't know what this feature means -HS",
-            "EstimatedDays": 10,
-            "EstimatedPrice": 2000,
-            "potential_issues": [
-                "Scope creep",
-                "Lack of clarity from client",
-                "Budget constraints"
-            ]
-        },
-        {
-            "MSCW": "1 Must Have",
-            "Area": "01 Analyze & Design",
-            "Module": "Overall",
             "Feature": "Technical Analysis",
-            "Task": "Choose technology stack and architecture",
+            "Task": "Conduct a technical analysis to determine the best technologies and infrastructure for the project",
             "Profile": "2 Consultant Technical",
-            "MinDays": 5,
-            "RealDays": 8,
-            "MaxDays": 12,
+            "MinDays": 2,
+            "RealDays": 3,
+            "MaxDays": 4,
             "Contingency": "I don't know what this feature means -HS",
-            "EstimatedDays": 10,
-            "EstimatedPrice": 2000,
+            "EstimatedDays": 4,
+            "EstimatedPrice": 800,
             "potential_issues": [
-                "Compatibility issues with existing systems",
-                "Limited scalability",
-                "Security vulnerabilities"
+                "Integration issues with legacy systems"
             ]
         },
         {
@@ -43,18 +22,16 @@
             "Area": "03 Setup",
             "Module": "Infra",
             "Feature": "Setup Environment + Azure",
-            "Task": "Provision Azure infrastructure and set up development, testing, and production environments",
+            "Task": "Set up environments for development, testing, and production on Azure",
             "Profile": "0 Blended Overall dev",
-            "MinDays": 5,
-            "RealDays": 8,
-            "MaxDays": 12,
+            "MinDays": 1,
+            "RealDays": 2,
+            "MaxDays": 3,
             "Contingency": "I don't know what this feature means -HS",
-            "EstimatedDays": 10,
-            "EstimatedPrice": 2000,
+            "EstimatedDays": 3,
+            "EstimatedPrice": 600,
             "potential_issues": [
-                "Configuration errors",
-                "Delayed setup from third-party providers",
-                "Limited availability of resources"
+                "Configuration issues with Azure"
             ]
         },
         {
@@ -62,37 +39,16 @@
             "Area": "04 Development",
             "Module": "Frontend",
             "Feature": "User Interface (UI)",
-            "Task": "Design and implement responsive UI for property listings and search",
+            "Task": "Design and develop a responsive UI that provides a seamless experience across devices",
             "Profile": "0 Blended FE dev",
-            "MinDays": 10,
-            "RealDays": 15,
-            "MaxDays": 20,
+            "MinDays": 3,
+            "RealDays": 4,
+            "MaxDays": 5,
             "Contingency": "I don't know what this feature means -HS",
-            "EstimatedDays": 20,
-            "EstimatedPrice": 4000,
+            "EstimatedDays": 6,
+            "EstimatedPrice": 1200,
             "potential_issues": [
-                "Cross-browser compatibility issues",
-                "Performance optimization for large search results",
-                "Accessibility compliance"
-            ]
-        },
-        {
-            "MSCW": "1 Must Have",
-            "Area": "04 Development",
-            "Module": "Frontend",
-            "Feature": "User Interface (UI)",
-            "Task": "Implement secure user authentication and profile management",
-            "Profile": "0 Blended FE dev",
-            "MinDays": 10,
-            "RealDays": 15,
-            "MaxDays": 20,
-            "Contingency": "I don't know what this feature means -HS",
-            "EstimatedDays": 20,
-            "EstimatedPrice": 4000,
-            "potential_issues": [
-                "Authentication vulnerabilities",
-                "User experience for forgotten passwords and account recovery",
-                "Integration with backend APIs"
+                "Cross-browser compatibility issues"
             ]
         },
         {
@@ -100,18 +56,16 @@
             "Area": "04 Development",
             "Module": "Middleware",
             "Feature": "Authentication & Authorizations",
-            "Task": "Develop and test RESTful APIs for property listings and user interactions",
+            "Task": "Implement secure user authentication to allow users to save favorite listings and schedule appointments",
             "Profile": "0 Blended MW dev",
-            "MinDays": 15,
-            "RealDays": 20,
-            "MaxDays": 25,
+            "MinDays": 2,
+            "RealDays": 3,
+            "MaxDays": 4,
             "Contingency": "I don't know what this feature means -HS",
-            "EstimatedDays": 30,
-            "EstimatedPrice": 6000,
+            "EstimatedDays": 4,
+            "EstimatedPrice": 800,
             "potential_issues": [
-                "API security vulnerabilities",
-                "API versioning and backward compatibility",
-                "Integration with database and middleware"
+                "Security vulnerabilities"
             ]
         },
         {
@@ -119,18 +73,16 @@
             "Area": "04 Development",
             "Module": "Middleware",
             "Feature": "Filtering / search",
-            "Task": "Implement search and filter functionality for property listings",
+            "Task": "Develop search and filter functionality based on various criteria such as price range, location, property type, and number of bedrooms",
             "Profile": "0 Blended MW dev",
-            "MinDays": 15,
-            "RealDays": 20,
-            "MaxDays": 25,
+            "MinDays": 3,
+            "RealDays": 4,
+            "MaxDays": 5,
             "Contingency": "I don't know what this feature means -HS",
-            "EstimatedDays": 30,
-            "EstimatedPrice": 6000,
+            "EstimatedDays": 6,
+            "EstimatedPrice": 1200,
             "potential_issues": [
-                "Performance optimization for large search results",
-                "Complex search logic",
-                "Integration with frontend UI"
+                "Performance issues with large amounts of data"
             ]
         },
         {
@@ -138,17 +90,32 @@
             "Area": "04 Development",
             "Module": "Middleware",
             "Feature": "Notifications",
-            "Task": "Develop and test notification and alert system for users and admins",
+            "Task": "Develop a system for sending notifications to users and admins, such as new listings in their preferred area or viewing confirmations",
             "Profile": "0 Blended MW dev",
-            "MinDays": 10,
-            "RealDays": 15,
-            "MaxDays": 20,
+            "MinDays": 2,
+            "RealDays": 3,
+            "MaxDays": 4,
             "Contingency": "I don't know what this feature means -HS",
-            "EstimatedDays": 20,
-            "EstimatedPrice": 4000,
+            "EstimatedDays": 4,
+            "EstimatedPrice": 800,
             "potential_issues": [
-                "Integration with third-party notification services",
-                "User preferences and settings for notifications",
+                "Integration issues with messaging system"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "04 Development",
+            "Module": "Middleware",
+            "Feature": "APIs for Data Access",
+            "Task": "Build REST APIs for accessing and updating property listings, user profiles, and appointment details",
+            "Profile": "0 Blended MW dev",
+            "MinDays": 3,
+            "RealDays": 4,
+            "MaxDays": 5,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 6,
+            "EstimatedPrice": 1200,
+            "potential_issues": [
                 "Security vulnerabilities"
             ]
         },
@@ -157,37 +124,50 @@
             "Area": "04 Development",
             "Module": "Middleware",
             "Feature": "Appointment Scheduling System",
-            "Task": "Integrate calendar and appointment scheduling system for agents and users",
+            "Task": "Integrate a scheduling system with calendar sync options to allow users to book viewings with agents",
             "Profile": "0 Blended MW dev",
-            "MinDays": 20,
-            "RealDays": 25,
-            "MaxDays": 30,
+            "MinDays": 2,
+            "RealDays": 3,
+            "MaxDays": 4,
             "Contingency": "I don't know what this feature means -HS",
-            "EstimatedDays": 38,
-            "EstimatedPrice": 7600,
+            "EstimatedDays": 4,
+            "EstimatedPrice": 800,
             "potential_issues": [
-                "Integration with calendar APIs",
-                "User experience and flow for scheduling and confirming appointments",
-                "Security vulnerabilities"
+                "Integration issues with calendar systems"
             ]
         },
         {
             "MSCW": "1 Must Have",
             "Area": "04 Development",
-            "Module": "Middleware",
-            "Feature": "Admin Dashboard",
-            "Task": "Develop and test admin dashboard for listing and user management, analytics, and reporting",
+            "Module": "Backend",
+            "Feature": "Listing Management",
+            "Task": "Develop tools for managing property listings, including adding, updating, and removing listings, with options for bulk actions",
             "Profile": "0 Blended MW dev",
-            "MinDays": 30,
-            "RealDays": 35,
-            "MaxDays": 40,
+            "MinDays": 3,
+            "RealDays": 4,
+            "MaxDays": 5,
             "Contingency": "I don't know what this feature means -HS",
-            "EstimatedDays": 48,
-            "EstimatedPrice": 9600,
+            "EstimatedDays": 6,
+            "EstimatedPrice": 1200,
             "potential_issues": [
-                "Integration with database and middleware",
-                "Data visualization and dashboard design",
-                "Security vulnerabilities"
+                "Performance issues with large amounts of data"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "04 Development",
+            "Module": "Backend",
+            "Feature": "Analytics & Reporting",
+            "Task": "Display statistics on user engagement and generate reports on a weekly or monthly basis",
+            "Profile": "0 Blended MW dev",
+            "MinDays": 3,
+            "RealDays": 4,
+            "MaxDays": 5,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 6,
+            "EstimatedPrice": 1200,
+            "potential_issues": [
+                "Data accuracy issues"
             ]
         }
     ]

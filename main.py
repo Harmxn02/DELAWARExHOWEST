@@ -157,6 +157,13 @@ def select_pdf():
                 12. **EstimatedPrice**: this is a formula that calculates the estimated price based on the EstimatedDays and the cost of the Profile. For now use 200 as the cost per day. The formula is: EstimatedDays * 200.
                 13. **Potential Issues**: List potential risks or issues that might arise, such as “security concerns,” “data compliance requirements,” or “scope changes.”
 
+                
+                General pointers:
+                    - Keep the estimated days low. Anywhere from 0 for MinDays to 4 days for MaxDays is a good estimate.
+                    - Make sure not to use the same Area for every task. Try to distribute the tasks across different Areas.
+                    - Make sure to use a wide variety of Profiles for the tasks. Don't use the same Profile for every task.
+
+
                 Return the response in this JSON structure:
                 
                 ```json
