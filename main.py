@@ -216,7 +216,7 @@ def select_pdf():
             df.to_csv('./export/response.csv', index=False)
             df.to_excel('./export/response.xlsx', index=False, sheet_name="Tasks", engine='openpyxl')
         else:
-            messagebox.showerror("Error", "Failed to extract tasks from the response.")
+            messagebox.showerror("Error", "Failed to extract tasks from the response: 'list_of_all_tasks' not found in DataFrame. Check the prompt to see if you are still prompting ChatGPT the correct layout -HS")
             return
 
 
