@@ -5,7 +5,25 @@
             "Area": "01 Analyze & Design",
             "Module": "Overall",
             "Feature": "Technical Analysis",
-            "Task": "Conduct a technical analysis to determine the best technologies and infrastructure for the project",
+            "Task": "Gather requirements for frontend UI design",
+            "Profile": "1 Analyst",
+            "MinDays": 2,
+            "RealDays": 3,
+            "MaxDays": 4,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 4,
+            "EstimatedPrice": 800,
+            "potential_issues": [
+                "Changes in requirements",
+                "Lack of clarity in requirements"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "03 Setup",
+            "Module": "Infra",
+            "Feature": "Setup Environment + Azure",
+            "Task": "Set up development, testing, and production environments in Azure",
             "Profile": "2 Consultant Technical",
             "MinDays": 2,
             "RealDays": 3,
@@ -14,24 +32,8 @@
             "EstimatedDays": 4,
             "EstimatedPrice": 800,
             "potential_issues": [
-                "Integration issues with legacy systems"
-            ]
-        },
-        {
-            "MSCW": "1 Must Have",
-            "Area": "03 Setup",
-            "Module": "Infra",
-            "Feature": "Setup Environment + Azure",
-            "Task": "Set up environments for development, testing, and production on Azure",
-            "Profile": "0 Blended Overall dev",
-            "MinDays": 1,
-            "RealDays": 2,
-            "MaxDays": 3,
-            "Contingency": "I don't know what this feature means -HS",
-            "EstimatedDays": 3,
-            "EstimatedPrice": 600,
-            "potential_issues": [
-                "Configuration issues with Azure"
+                "Configuring environments",
+                "Integration issues with other systems"
             ]
         },
         {
@@ -39,16 +41,35 @@
             "Area": "04 Development",
             "Module": "Frontend",
             "Feature": "User Interface (UI)",
-            "Task": "Design and develop a responsive UI that provides a seamless experience across devices",
+            "Task": "Create property listing UI with search and filter functionality",
+            "Profile": "0 Blended FE dev",
+            "MinDays": 4,
+            "RealDays": 5,
+            "MaxDays": 6,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 6,
+            "EstimatedPrice": 1200,
+            "potential_issues": [
+                "Integration with backend APIs",
+                "Performance issues with large datasets"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "04 Development",
+            "Module": "Frontend",
+            "Feature": "User Interface (UI)",
+            "Task": "Implement user authentication and profile management UI",
             "Profile": "0 Blended FE dev",
             "MinDays": 3,
             "RealDays": 4,
             "MaxDays": 5,
             "Contingency": "I don't know what this feature means -HS",
-            "EstimatedDays": 6,
-            "EstimatedPrice": 1200,
+            "EstimatedDays": 5,
+            "EstimatedPrice": 1000,
             "potential_issues": [
-                "Cross-browser compatibility issues"
+                "Security concerns with user data",
+                "Complexity of user authentication flow"
             ]
         },
         {
@@ -56,41 +77,43 @@
             "Area": "04 Development",
             "Module": "Middleware",
             "Feature": "Authentication & Authorizations",
-            "Task": "Implement secure user authentication to allow users to save favorite listings and schedule appointments",
+            "Task": "Implement secure user authentication and authorization system",
             "Profile": "0 Blended MW dev",
-            "MinDays": 2,
-            "RealDays": 3,
-            "MaxDays": 4,
+            "MinDays": 4,
+            "RealDays": 5,
+            "MaxDays": 6,
             "Contingency": "I don't know what this feature means -HS",
-            "EstimatedDays": 4,
-            "EstimatedPrice": 800,
+            "EstimatedDays": 6,
+            "EstimatedPrice": 1200,
             "potential_issues": [
-                "Security vulnerabilities"
+                "Security vulnerabilities",
+                "Integration with frontend UI"
             ]
         },
         {
-            "MSCW": "1 Must Have",
+            "MSCW": "2 Should Have",
             "Area": "04 Development",
             "Module": "Middleware",
             "Feature": "Filtering / search",
-            "Task": "Develop search and filter functionality based on various criteria such as price range, location, property type, and number of bedrooms",
+            "Task": "Implement advanced search and filtering options for property listings",
             "Profile": "0 Blended MW dev",
             "MinDays": 3,
             "RealDays": 4,
             "MaxDays": 5,
             "Contingency": "I don't know what this feature means -HS",
-            "EstimatedDays": 6,
-            "EstimatedPrice": 1200,
+            "EstimatedDays": 5,
+            "EstimatedPrice": 1000,
             "potential_issues": [
-                "Performance issues with large amounts of data"
+                "Performance issues with complex search queries",
+                "Integration with database"
             ]
         },
         {
-            "MSCW": "1 Must Have",
+            "MSCW": "2 Should Have",
             "Area": "04 Development",
             "Module": "Middleware",
             "Feature": "Notifications",
-            "Task": "Develop a system for sending notifications to users and admins, such as new listings in their preferred area or viewing confirmations",
+            "Task": "Implement user notification system for new listings and viewing confirmations",
             "Profile": "0 Blended MW dev",
             "MinDays": 2,
             "RealDays": 3,
@@ -99,32 +122,34 @@
             "EstimatedDays": 4,
             "EstimatedPrice": 800,
             "potential_issues": [
-                "Integration issues with messaging system"
+                "Integration with frontend UI",
+                "Notification delivery reliability"
             ]
         },
         {
-            "MSCW": "1 Must Have",
+            "MSCW": "3 Could Have",
             "Area": "04 Development",
             "Module": "Middleware",
-            "Feature": "APIs for Data Access",
-            "Task": "Build REST APIs for accessing and updating property listings, user profiles, and appointment details",
+            "Feature": "Monitoring",
+            "Task": "Implement monitoring and analytics system for user engagement metrics",
             "Profile": "0 Blended MW dev",
             "MinDays": 3,
             "RealDays": 4,
             "MaxDays": 5,
             "Contingency": "I don't know what this feature means -HS",
-            "EstimatedDays": 6,
-            "EstimatedPrice": 1200,
+            "EstimatedDays": 5,
+            "EstimatedPrice": 1000,
             "potential_issues": [
-                "Security vulnerabilities"
+                "Complexity of data analytics",
+                "Integration with database"
             ]
         },
         {
-            "MSCW": "1 Must Have",
+            "MSCW": "3 Could Have",
             "Area": "04 Development",
             "Module": "Middleware",
-            "Feature": "Appointment Scheduling System",
-            "Task": "Integrate a scheduling system with calendar sync options to allow users to book viewings with agents",
+            "Feature": "Settings",
+            "Task": "Implement user settings functionality for profile and notification preferences",
             "Profile": "0 Blended MW dev",
             "MinDays": 2,
             "RealDays": 3,
@@ -133,41 +158,26 @@
             "EstimatedDays": 4,
             "EstimatedPrice": 800,
             "potential_issues": [
-                "Integration issues with calendar systems"
+                "Integration with frontend UI",
+                "Security concerns with user data"
             ]
         },
         {
-            "MSCW": "1 Must Have",
+            "MSCW": "3 Could Have",
             "Area": "04 Development",
-            "Module": "Backend",
-            "Feature": "Listing Management",
-            "Task": "Develop tools for managing property listings, including adding, updating, and removing listings, with options for bulk actions",
-            "Profile": "0 Blended MW dev",
-            "MinDays": 3,
-            "RealDays": 4,
-            "MaxDays": 5,
+            "Module": "Security",
+            "Feature": "Security Review",
+            "Task": "Conduct security review and penetration testing of the platform",
+            "Profile": "2 Consultant Technical",
+            "MinDays": 4,
+            "RealDays": 5,
+            "MaxDays": 6,
             "Contingency": "I don't know what this feature means -HS",
-            "EstimatedDays": 6,
-            "EstimatedPrice": 1200,
+            "EstimatedDays": 7,
+            "EstimatedPrice": 1400,
             "potential_issues": [
-                "Performance issues with large amounts of data"
-            ]
-        },
-        {
-            "MSCW": "1 Must Have",
-            "Area": "04 Development",
-            "Module": "Backend",
-            "Feature": "Analytics & Reporting",
-            "Task": "Display statistics on user engagement and generate reports on a weekly or monthly basis",
-            "Profile": "0 Blended MW dev",
-            "MinDays": 3,
-            "RealDays": 4,
-            "MaxDays": 5,
-            "Contingency": "I don't know what this feature means -HS",
-            "EstimatedDays": 6,
-            "EstimatedPrice": 1200,
-            "potential_issues": [
-                "Data accuracy issues"
+                "Identification of vulnerabilities",
+                "Integration with existing security systems"
             ]
         }
     ]

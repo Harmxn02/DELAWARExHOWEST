@@ -8,6 +8,8 @@ from tkinter import filedialog, messagebox
 from azure.storage.blob import BlobServiceClient, ContentSettings
 import os
 
+import pandas as pd
+
 
 def upload_pdf_to_azure(file_path):
     try:
@@ -198,11 +200,24 @@ def select_pdf():
             if answer:
                 with open("response.json", "w") as f:
                     f.write(answer)
-                messagebox.showinfo("Success", "Analysis completed and saved as answer.json!")
+                messagebox.showinfo("Success", "Analysis completed and saved as response.json!")
             else:
                 messagebox.showerror("Error", "Failed to get a response from OpenAI.")
         else:
             messagebox.showerror("Error", "Failed to analyze PDF.")
+
+        
+
+
+        # Extract the tasks from the response, into a CSV and Excel file
+        df = pd.read_json("response.json")
+        if 'list_of_all_tasks' in df:
+            df = pd.json_normalize(df['list_of_all_tasks'])
+            df.to_csv('./export/response.csv', index=False)
+            df.to_excel('./export/response.xlsx', index=False, sheet_name="Tasks", engine='openpyxl')
+        else:
+            messagebox.showerror("Error", "Failed to extract tasks from the response.")
+            return
 
 
 root = tk.Tk()
