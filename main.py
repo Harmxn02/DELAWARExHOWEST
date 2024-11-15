@@ -162,6 +162,7 @@ def select_pdf():
                 
                 General pointers:
                     - Keep the estimated days low. Anywhere from 0 for MinDays to 4 days for MaxDays is a good estimate.
+                    - It is possible for a task to be done within a day, so don't hesitate to use 0 for MinDays, and 0.5 for RealDays.
                     - Make sure not to use the same Area for every task. Try to distribute the tasks across different Areas.
                     - Make sure to use a wide variety of Profiles for the tasks. Don't use the same Profile for every task.
 
