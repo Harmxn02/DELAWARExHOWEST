@@ -1,0 +1,202 @@
+{
+    "list_of_all_tasks": [
+        {
+            "MSCW": "1 Must Have",
+            "Area": "01 Analyze & Design",
+            "Module": "Overall",
+            "Feature": "Technical Analysis",
+            "Task": "Gather requirements from RealEstateCo stakeholders and develop project scope document",
+            "Profile": "1 Analyst",
+            "MinDays": 2,
+            "RealDays": 4,
+            "MaxDays": 6,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 5,
+            "EstimatedPrice": 1000,
+            "potential_issues": [
+                "Scope changes",
+                "Lack of clarity in requirements"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "01 Analyze & Design",
+            "Module": "Overall",
+            "Feature": "Functional Analysis",
+            "Task": "Create functional specifications document for the platform",
+            "Profile": "2 Consultant Technical",
+            "MinDays": 2,
+            "RealDays": 3,
+            "MaxDays": 4,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 4,
+            "EstimatedPrice": 800,
+            "potential_issues": [
+                "Scope changes",
+                "Lack of clarity in requirements"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "03 Setup",
+            "Module": "Overall",
+            "Feature": "Setup Projects",
+            "Task": "Set up project management tools (e.g. Jira) and source control (e.g. Git) for the team",
+            "Profile": "0 Blended Overall dev",
+            "MinDays": 0.5,
+            "RealDays": 1,
+            "MaxDays": 2,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 1,
+            "EstimatedPrice": 200,
+            "potential_issues": [
+                "Issues with tool integration",
+                "Training team members on new tools"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "03 Setup",
+            "Module": "Overall",
+            "Feature": "Setup Environment + Azure",
+            "Task": "Set up development, testing, and production environments in Azure",
+            "Profile": "0 Blended Overall dev",
+            "MinDays": 1,
+            "RealDays": 2,
+            "MaxDays": 3,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 3,
+            "EstimatedPrice": 600,
+            "potential_issues": [
+                "Azure setup issues",
+                "Integration issues with other tools"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "04 Development",
+            "Module": "Frontend",
+            "Feature": "User Interface (UI)",
+            "Task": "Design and develop the property listing UI with search and filter functionality",
+            "Profile": "0 Blended FE dev",
+            "MinDays": 3,
+            "RealDays": 5,
+            "MaxDays": 7,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 6,
+            "EstimatedPrice": 1200,
+            "potential_issues": [
+                "Usability issues",
+                "Browser compatibility issues"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "04 Development",
+            "Module": "Frontend",
+            "Feature": "User Experience (UX)",
+            "Task": "Develop a seamless user experience across devices",
+            "Profile": "0 Blended FE dev",
+            "MinDays": 2,
+            "RealDays": 3,
+            "MaxDays": 4,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 3,
+            "EstimatedPrice": 600,
+            "potential_issues": [
+                "Mobile responsiveness issues",
+                "Usability issues"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "04 Development",
+            "Module": "Middleware",
+            "Feature": "Authentication & Authorizations",
+            "Task": "Implement secure user authentication and authorization system",
+            "Profile": "0 Blended MW dev",
+            "MinDays": 2,
+            "RealDays": 3,
+            "MaxDays": 4,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 4,
+            "EstimatedPrice": 800,
+            "potential_issues": [
+                "Security concerns",
+                "Integration issues with other modules"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "04 Development",
+            "Module": "Middleware",
+            "Feature": "Filtering / search",
+            "Task": "Develop property search and filter functionality",
+            "Profile": "0 Blended MW dev",
+            "MinDays": 2,
+            "RealDays": 3,
+            "MaxDays": 4,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 4,
+            "EstimatedPrice": 800,
+            "potential_issues": [
+                "Performance issues with large datasets",
+                "Usability issues"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "04 Development",
+            "Module": "Middleware",
+            "Feature": "Notifications",
+            "Task": "Develop a notification system for users and admins",
+            "Profile": "0 Blended MW dev",
+            "MinDays": 2,
+            "RealDays": 3,
+            "MaxDays": 4,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 4,
+            "EstimatedPrice": 800,
+            "potential_issues": [
+                "Integration issues with other modules",
+                "Usability issues"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "04 Development",
+            "Module": "Middleware",
+            "Feature": "APIs for Data Access",
+            "Task": "Develop REST APIs for accessing and updating property listings, user profiles, and appointment details",
+            "Profile": "0 Blended MW dev",
+            "MinDays": 3,
+            "RealDays": 5,
+            "MaxDays": 7,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 6,
+            "EstimatedPrice": 1200,
+            "potential_issues": [
+                "API security concerns",
+                "Integration issues with other modules"
+            ]
+        },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "04 Development",
+            "Module": "Security",
+            "Feature": "Security Review",
+            "Task": "Perform a security review of the platform and implement necessary measures",
+            "Profile": "3 Senior Consultant Technical",
+            "MinDays": 2,
+            "RealDays": 4,
+            "MaxDays": 6,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 5,
+            "EstimatedPrice": 1000,
+            "potential_issues": [
+                "Integration issues with other modules",
+                "Security concerns"
+            ]
+        }
+    ]
+}
