@@ -115,7 +115,7 @@ if uploaded_file:
 
             if extracted_text:
                 st.success("PDF analysis complete!")
-                st.text_area("Extracted Text", extracted_text, height=300)
+                # st.text_area("Extracted Text", extracted_text, height=300)
 
                 # Prepare question for OpenAI
                 user_question = """
@@ -183,7 +183,7 @@ if uploaded_file:
 
                 if answer:
                     st.success("OpenAI analysis complete!")
-                    st.json(answer)
+                    # st.json(answer)
 
                     # Save response to a JSON file
                     json_file_path = "./response.json"
