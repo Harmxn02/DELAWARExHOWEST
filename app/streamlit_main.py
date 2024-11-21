@@ -129,6 +129,38 @@ POTENTIAL_ISSUES = [
     "Security vulnerabilities", "Calendar integration errors"
 ]
 
+# Generate a single random project entry
+def generate_fake_project():
+    mscw = rnd.choice(MSCW_OPTIONS)
+    area = rnd.choice(AREAS)
+    module = rnd.choice(MODULES)
+    feature = rnd.choice(FEATURES)
+    task = f"Task: {feature} for {module}"  # Example task description
+    profile = f"{rnd.randint(1, 4)} {rnd.choice(PROFILES)}"
+    min_days = rnd.randint(3, 7)
+    most_likely_days = rnd.randint(min_days + 1, min_days + 3)
+    max_days = rnd.randint(most_likely_days + 1, most_likely_days + 4)
+    contingency = f"Contingency info for {feature}"  # Example contingency text
+    estimated_days = most_likely_days + 2  # Add buffer for estimated days
+    estimated_price = estimated_days * 200  # Example price calculation
+    potential_issues = rnd.sample(POTENTIAL_ISSUES, 2)  # Pick 2 rnd issues
+    
+    # Return a dictionary representing the row
+    return {
+        "MSCW": mscw,
+        "Area": area,
+        "Module": module,
+        "Feature": feature,
+        "Task": task,
+        "Profile": profile,
+        "MinDays": min_days,
+        "RealDays": most_likely_days,
+        "MaxDays": max_days,
+        "Contingency": contingency,
+        "EstimatedDays": estimated_days,
+        "EstimatedPrice": estimated_price,
+        "potential_issues": potential_issues,
+    }
 
 
 #endregion
