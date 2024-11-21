@@ -1,3 +1,0 @@
-requests
-config
-azure.storage.blob

@@ -1,12 +1,22 @@
-# DELAWARExHOWEST - Project Estimation Application
+# DELAWARExHOWEST - AI-driven Project Estimations Application
 
 ## Overview
 
-The **Project Estimation Application** is designed to help software engineering teams estimate the development effort required for a project based on detailed project descriptions provided in PDF format. The script reads in the PDFs describing a project (including tasks, tools, framewors, etc.) and generates estimations for each task in terms of:
+The **AI-Driven Project Estimation Application** is designed to help software engineering teams estimate the development effort required for a project based on detailed project descriptions provided in PDF format. The applications reads in a PDF-file describing a project (including tasks, tools, frameworks, etc.) and generates estimations for each task in terms of:
 
-- Estimated man-days (minimum, most likely, maximum)
-- Fitting employee roles from a pre-defined list of job titles
-- Feature categories for each task
+1. **MSCW**: The priority of the task.
+1. **Area**: The area of the project where the task belongs.
+1. **Module**: The software engineering domain of the task.
+1. **Feature**: What exactly is being done in the task.
+1. **Task**: Summarize the task in a detailed sentence or two.
+1. **Profile**: The role of the person who will perform the task.
+1. **MinDays**: The estimated minimum number of days required to complete the task.
+1. **RealDays**: The average or most likely number of days required to complete the task.
+1. **MaxDays**: The estimated maximum number of days required to complete the task.
+1. **Contingency**
+1. **EstimatedDays**
+1. **EstimatedPrice**
+1. **Potential Issues**
 
 These estimations are returned in a structured JSON format, which is read into the Web App.
 
@@ -14,67 +24,46 @@ These estimations are returned in a structured JSON format, which is read into t
 
 The script returns a structured JSON output with estimated details for each task in the project, similar to the example below:
 
-``` json
+```json
 {
-    "list_of_all_tasks": {
-        "task 1": {
-            "description": "Design a responsive UI that provides a seamless experience across devices (desktop, tablet, mobile)",
-            "fitting_employees": [
-                {
-                    "role": "UI Designer",
-                    "count": 2
-                }
-            ],
-            "estimated_days": {
-                "min": 5,
-                "most_likely": 7,
-                "max": 10
-            },
+    "list_of_all_tasks": [
+        {
+            "MSCW": "1 Must Have",
+            "Area": "01 Analyze & Design",
+            "Module": "Overall",
+            "Feature": "Technical Analysis",
+            "Task": "Gather requirements from RealEstateCo stakeholders and develop project scope document",
+            "Profile": "1 Analyst",
+            "MinDays": 2,
+            "RealDays": 4,
+            "MaxDays": 6,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 5,
+            "EstimatedPrice": 1000,
             "potential_issues": [
-                "Cross-browser compatibility issues",
-                "UI/UX challenges for mobile devices",
-                "Scope changes due to design iterations"
+                "Scope changes",
+                "Lack of clarity in requirements"
             ]
         },
-        "task 2": {
-            "description": "Develop a relational database to store property listings, user profiles, and interactions",
-            "fitting_employees": [
-                {
-                    "role": "Database Developer",
-                    "count": 2
-                }
-            ],
-            "estimated_days": {
-                "min": 10,
-                "most_likely": 14,
-                "max": 20
-            },
+        {
+            "MSCW": "1 Must Have",
+            "Area": "01 Analyze & Design",
+            "Module": "Overall",
+            "Feature": "Functional Analysis",
+            "Task": "Create functional specifications document for the platform",
+            "Profile": "2 Consultant Technical",
+            "MinDays": 2,
+            "RealDays": 3,
+            "MaxDays": 4,
+            "Contingency": "I don't know what this feature means -HS",
+            "EstimatedDays": 4,
+            "EstimatedPrice": 800,
             "potential_issues": [
-                "Data migration challenges from legacy systems",
-                "Data compliance requirements",
-                "Data security concerns"
+                "Scope changes",
+                "Lack of clarity in requirements"
             ]
         },
-        "task 3": {
-            "description": "Build REST APIs for accessing and updating property listings, user profiles, and appointment details",
-            "fitting_employees": [
-                {
-                    "role": "Backend Developer",
-                    "count": 3
-                }
-            ],
-            "estimated_days": {
-                "min": 15,
-                "most_likely": 20,
-                "max": 30
-            },
-            "potential_issues": [
-                "Integration challenges with third-party systems",
-                "API security vulnerabilities",
-                "Scope changes due to API design iterations"
-            ]
-        }
-    }
+    ]
 }
 ```
 
@@ -84,40 +73,39 @@ The script returns a structured JSON output with estimated details for each task
 - Natural langage processing: GPT-3.5 through the Azure OpenAI resource
 - PDF parsing: Azure Document Intelligence
 
-- Frontend: to-do
-- Database: to-do
-- Hosting: to-do, but will most likely be Azure Static Web Apps
+- Frontend: Streamlit application
+- Hosting: currently hosted on Streamlit itself, but will most likely be Azure Static Web Apps
 
 ## Installation and setup
 
 ### Requirements
 
 - Python
-- Node.js
 - API Key for Language Model (e.g., OpenAI API through Azure)
 
 ### Steps to install
 
-1. Clone the repository
+#### Step 1. Clone the repository
 
-``` bash
-git clone https://github.com/Harmxn02/DELAWARExHOWEST_Setup.git
-cd DELAWARExHOWEST_Setup
+```bash
+git clone https://github.com/Harmxn02/DELAWARExHOWEST_AI-driven-project-estimations.git
+cd DELAWARExHOWEST_AI-driven-project-estimations
 
 ```
 
-2. Install necessary libraries
+#### Step 2. Install necessary libraries
 
-``` bash
+```bash
+cd .\app\
 pip install -r requirements.txt
 ```
 
-3. Set up environment variables
+#### Step 3. Set up environment variables
 
-Create a `config.py` in the root directory and include your API keys and configuration settings. Below is an example using placeholder values:
+Inside the `.\app\` directory create a `.streamlit` folder, with inside it a `secrets.toml` file which contain your API keys and configuration settings. Below is an example using placeholder values:
 
-``` python
-# config.py
+```python
+# secrets.toml
 
 # Azure Document Intelligence Variables
 DOC_INTEL_ENDPOINT = "placeholder"
@@ -132,7 +120,3 @@ AZURE_STORAGE_ACCOUNT_NAME = "placeholder"
 AZURE_CONTAINER_NAME = "placeholder"
 AZURE_STORAGE_CONNECTION_STRING = "placeholder"
 ```
-
-4. Still in progress
-
-Most likely we will have an executable that will run the script, and afterwards automatically open the web-app.

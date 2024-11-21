@@ -4,7 +4,6 @@ import requests
 import pandas as pd
 import streamlit as st
 from azure.storage.blob import BlobServiceClient, ContentSettings
-import config
 import io
 import random as rnd
 from datetime import datetime
@@ -12,10 +11,10 @@ from datetime import datetime
 def upload_pdf_to_azure(uploaded_file):
     try:
         # Initialize the BlobServiceClient with the connection string
-        blob_service_client = BlobServiceClient.from_connection_string(config.AZURE_STORAGE_CONNECTION_STRING)
+        blob_service_client = BlobServiceClient.from_connection_string(st.secrets["AZURE_STORAGE_CONNECTION_STRING"])
         
         # Get a client for the container
-        container_client = blob_service_client.get_container_client(config.AZURE_CONTAINER_NAME)
+        container_client = blob_service_client.get_container_client(st.secrets["AZURE_CONTAINER_NAME"])
         
         # Ensure container exists, create if not
         if not container_client.exists():
@@ -31,7 +30,7 @@ def upload_pdf_to_azure(uploaded_file):
         blob_client.upload_blob(uploaded_file, overwrite=True, content_settings=ContentSettings(content_type='application/pdf'))
         
         # Construct the URL to the uploaded blob
-        blob_url = f"https://{config.AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net/{config.AZURE_CONTAINER_NAME}/{blob_name}"
+        blob_url = f"https://{st.secrets["AZURE_STORAGE_ACCOUNT_NAME"]}.blob.core.windows.net/{st.secrets["AZURE_CONTAINER_NAME"]}/{blob_name}"
 
         st.success(f"Upload successful. File URL: {blob_url}")
         return blob_url
@@ -42,10 +41,10 @@ def upload_pdf_to_azure(uploaded_file):
 
 
 def analyze_pdf(pdf_path_or_url, is_url=False):
-    analyze_url = f"{config.DOC_INTEL_ENDPOINT}/formrecognizer/documentModels/prebuilt-read:analyze?api-version=2023-07-31"
+    analyze_url = f"{st.secrets["DOC_INTEL_ENDPOINT"]}/formrecognizer/documentModels/prebuilt-read:analyze?api-version=2023-07-31"
     headers = {
         "Content-Type": "application/json" if is_url else "application/octet-stream",
-        "Ocp-Apim-Subscription-Key": config.DOC_INTEL_API_KEY,
+        "Ocp-Apim-Subscription-Key": st.secrets["DOC_INTEL_API_KEY"],
     }
 
     try:
@@ -60,7 +59,7 @@ def analyze_pdf(pdf_path_or_url, is_url=False):
             while True:
                 result_response = requests.get(
                     operation_location,
-                    headers={"Ocp-Apim-Subscription-Key": config.DOC_INTEL_API_KEY},
+                    headers={"Ocp-Apim-Subscription-Key": st.secrets["DOC_INTEL_API_KEY"]},
                 )
                 result_json = result_response.json()
 
@@ -84,13 +83,13 @@ def analyze_pdf(pdf_path_or_url, is_url=False):
 
 
 def ask_openai(question, context):
-    headers = {"Content-Type": "application/json", "api-key": config.OPENAI_API_KEY}
+    headers = {"Content-Type": "application/json", "api-key": st.secrets["OPENAI_API_KEY"]}
 
     messages = [{"role": "user", "content": f"Context:\n{context}\n\nQuestion: {question}"}]
     data = {"messages": messages, "max_tokens": 2000, "temperature": 0.7}
 
     try:
-        response = requests.post(config.OPENAI_ENDPOINT, headers=headers, json=data)
+        response = requests.post(st.secrets["OPENAI_ENDPOINT"], headers=headers, json=data)
 
         if response.status_code == 200:
             return response.json()["choices"][0]["message"]["content"].strip()
@@ -191,7 +190,8 @@ def save_data_to_excel(fake_data, output_dir="export/fake data", file_prefix="fa
 #endregion
 
 # Streamlit App
-st.title("DELWARExHOWEST - PDF Estimation Generator")
+st.title("DELAWARExHOWEST")
+st.subheader("AI-Driven Estimation")
 
 uploaded_file = st.file_uploader("Upload a PDF file", type=["pdf"])
 num_generate_files = st.number_input("Enter the number of projects to generate:", min_value=1, max_value=50, step=1)
