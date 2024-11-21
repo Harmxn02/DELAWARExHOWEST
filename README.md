@@ -102,7 +102,7 @@ pip install -r requirements.txt
 
 #### Step 3. Set up environment variables
 
-Inside the `.\app\` directory reate a `.streamlit` folder, with inside it a `secrets.toml` file which include your API keys and configuration settings. Below is an example using placeholder values:
+Inside the `.\app\` directory create a `.streamlit` folder, with inside it a `secrets.toml` file which contain your API keys and configuration settings. Below is an example using placeholder values:
 
 ```python
 # secrets.toml
