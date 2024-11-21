@@ -29,7 +29,7 @@ def upload_pdf_to_azure(uploaded_file):
         blob_client.upload_blob(uploaded_file, overwrite=True, content_settings=ContentSettings(content_type='application/pdf'))
         
         # Construct the URL to the uploaded blob
-        blob_url = f"https://{st.secrets["AZURE_STORAGE_ACCOUNT_NAME"]}.blob.core.windows.net/{st.secrets["AZURE_CONTAINER_NAME"]}/{blob_name}"
+        blob_url = f"https://{st.secrets['AZURE_STORAGE_ACCOUNT_NAME']}.blob.core.windows.net/{st.secrets['AZURE_CONTAINER_NAME']}/{blob_name}"
 
         st.success(f"Upload successful. File URL: {blob_url}")
         return blob_url
