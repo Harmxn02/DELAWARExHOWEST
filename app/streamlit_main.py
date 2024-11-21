@@ -101,7 +101,8 @@ def ask_openai(question, context):
 
 
 # Streamlit App
-st.title("DELWARExHOWEST - PDF Estimation Generator")
+st.title("DELAWARExHOWEST")
+st.subheader("AI-Driven Estimation")
 
 uploaded_file = st.file_uploader("Upload a PDF file", type=["pdf"])
 
