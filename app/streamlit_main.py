@@ -162,6 +162,19 @@ def generate_fake_project():
         "potential_issues": potential_issues,
     }
 
+# Generate a dataset with fake projects
+def generate_dataset(num_projects=10):
+    return [generate_fake_project() for _ in range(num_projects)]
+
+# Save the dataset to an Excel file
+def save_data_to_excel(fake_data, output_dir="export/fake data", file_name="fake_data.xlsx"):
+    os.makedirs(output_dir, exist_ok=True)  # Create the directory if it doesn't exist
+    output_path = os.path.join(output_dir, file_name)
+    
+    # Save to Excel
+    df = pd.DataFrame(fake_data)
+    df.to_excel(output_path, index=False)
+    print(f"Fake data project created at: {output_path}")
 
 #endregion
 
