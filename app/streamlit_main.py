@@ -6,6 +6,7 @@ import streamlit as st
 from azure.storage.blob import BlobServiceClient, ContentSettings
 import config
 import io
+import random as rnd
 
 
 def upload_pdf_to_azure(uploaded_file):
@@ -100,6 +101,37 @@ def ask_openai(question, context):
         st.error(f"An error occurred during OpenAI query: {str(e)}")
         return None
 
+#region Generate fake data and store in Azure storageaccount
+
+# Headers for the Excel file
+HEADERS = [
+    "MSCW", "Area", "Module", "Feature", "Task", "Profile", "MinDays", "RealDays", 
+    "MaxDays", "Contingency", "EstimatedDays", "EstimatedPrice", "potential_issues"
+]
+
+# Lists for randomization
+MSCW_OPTIONS = ["1 Must Have", "2 Should Have", "3 Could Have"]
+AREAS = ["01 Analyze & Design", "02 Architecture", "03 Setup", "04 Development"]
+MODULES = ["Overall", "Frontend", "Middleware", "Security"]
+FEATURES = [
+    "Technical Analysis", "Setup Environment + Azure", "User Interface (UI)", 
+    "Authentication & Authorizations", "Filtering / search", "Notifications", 
+    "Appointment Scheduling System", "Security Review", "Settings"
+]
+PROFILES = [
+    "Consultant Technical", "Senior Consultant Technical", "Blended FE dev", 
+    "Blended MW dev", "Fullstack Developer", "UI Designer", "Project Manager", 
+    "Quality Assurance Engineer", "Lead Expert"
+]
+POTENTIAL_ISSUES = [
+    "Scope creep", "Integration issues with Azure", "Cross-browser compatibility issues", 
+    "Usability challenges", "API security vulnerabilities", "Performance issues", 
+    "Security vulnerabilities", "Calendar integration errors"
+]
+
+
+
+#endregion
 
 # Streamlit App
 st.title("DELWARExHOWEST - PDF Estimation Generator")
