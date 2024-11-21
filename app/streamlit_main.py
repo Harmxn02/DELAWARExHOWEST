@@ -163,7 +163,7 @@ def generate_fake_project():
     }
 
 # Generate a dataset with fake projects
-def generate_dataset(num_projects=10):
+def generate_dataset(num_projects):
     return [generate_fake_project() for _ in range(num_projects)]
 
 # Save the dataset to an Excel file
@@ -182,6 +182,7 @@ def save_data_to_excel(fake_data, output_dir="export/fake data", file_name="fake
 st.title("DELWARExHOWEST - PDF Estimation Generator")
 
 uploaded_file = st.file_uploader("Upload a PDF file", type=["pdf"])
+num_generate_files = st.number_input("Enter the number of projects to generate:", min_value=1, max_value=50, step=1)
 
 if uploaded_file:
     with st.spinner("Uploading and analyzing PDF..."):
@@ -299,3 +300,22 @@ if uploaded_file:
                             st.error("Failed to extract tasks: Check the prompt or OpenAI response structure.")
                     except Exception as e:
                         st.error(f"Error while processing OpenAI response: {str(e)}")
+elif num_generate_files:
+    with st.spinner("Generating files..."):
+
+        if st.button("Generate fake projects"):
+            fake_projects = generate_dataset(num_generate_files)
+
+            if fake_projects:
+                st.success("Fake projects succesfully generated!")
+
+                with st.spinner("Saving files..."):
+                    output_path = save_data_to_excel(fake_projects)
+
+                    if output_path:
+                        st.succes(f"Generated {num_generate_files} fake projects!")
+                        st.write(f"The Excel files has been saved to: `{output_path}`")
+
+                        st.write("Generated Data preview:")
+                        st.datafram(pd.DataFrame(fake_projects))
+                        
