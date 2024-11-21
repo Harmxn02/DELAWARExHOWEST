@@ -7,7 +7,7 @@ from azure.storage.blob import BlobServiceClient, ContentSettings
 import config
 import io
 import random as rnd
-
+from datetime import datetime
 
 def upload_pdf_to_azure(uploaded_file):
     try:
@@ -167,14 +167,26 @@ def generate_dataset(num_projects):
     return [generate_fake_project() for _ in range(num_projects)]
 
 # Save the dataset to an Excel file
-def save_data_to_excel(fake_data, output_dir="export/fake data", file_name="fake_data.xlsx"):
+def save_data_to_excel(fake_data, output_dir="export/fake data", file_prefix="fake_project_"):
     os.makedirs(output_dir, exist_ok=True)  # Create the directory if it doesn't exist
-    output_path = os.path.join(output_dir, file_name)
-    
-    # Save to Excel
-    df = pd.DataFrame(fake_data)
-    df.to_excel(output_path, index=False)
-    print(f"Fake data project created at: {output_path}")
+
+    # Initialize a list to hold the file paths of the generated files
+    saved_file_paths = []
+
+    # Loop through and generate a file for each project batch
+    for i in range(len(fake_data)):
+        # Generate a unique filename based on the current timestamp + index
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        file_name = f"{file_prefix}{timestamp}_{i + 1}.xlsx"
+        output_path = os.path.join(output_dir, file_name)
+
+        # Save to Excel
+        df = pd.DataFrame(fake_data[i])  # Each element in fake_data is a list of project data
+        df.to_excel(output_path, index=False)
+        saved_file_paths.append(output_path)
+        print(f"Fake data project created at: {output_path}")
+
+    return saved_file_paths  # Return the paths of all saved files
 
 #endregion
 
@@ -300,6 +312,7 @@ if uploaded_file:
                             st.error("Failed to extract tasks: Check the prompt or OpenAI response structure.")
                     except Exception as e:
                         st.error(f"Error while processing OpenAI response: {str(e)}")
+# Streamlit logic for generating multiple project files
 elif num_generate_files:
     with st.spinner("Generating files..."):
 
@@ -307,15 +320,18 @@ elif num_generate_files:
             fake_projects = generate_dataset(num_generate_files)
 
             if fake_projects:
-                st.success("Fake projects succesfully generated!")
+                st.success(f"Fake project(s) successfully generated! ({num_generate_files} projects)")
 
                 with st.spinner("Saving files..."):
-                    output_path = save_data_to_excel(fake_projects)
+                    # Save files, the new function now supports generating multiple files
+                    output_paths = save_data_to_excel([fake_projects] * num_generate_files)  # Generate separate files for each project
 
-                    if output_path:
-                        st.succes(f"Generated {num_generate_files} fake projects!")
-                        st.write(f"The Excel files has been saved to: `{output_path}`")
-
-                        st.write("Generated Data preview:")
-                        st.datafram(pd.DataFrame(fake_projects))
+                    if output_paths:
+                        st.success(f"Generated {num_generate_files} fake project file(s)!")
                         
+                        # Show a list of saved files
+                        st.write(f"Generated files: {output_paths}")
+
+                        # Optionally preview the first dataset
+                        st.write("Generated Data preview:")
+                        st.dataframe(pd.DataFrame(fake_projects))  # Preview the first dataset
