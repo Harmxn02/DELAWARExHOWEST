@@ -173,6 +173,8 @@ if uploaded_file:
                         - It is possible for a task to be done within a day, so don't hesitate to use 0 for MinDays, and 0.5 for RealDays.
                         - Make sure not to use the same Area for every task. Try to distribute the tasks across different Areas.
                         - Make sure to use a wide variety of Profiles for the tasks. Don't use the same Profile for every task.
+                        - Make sure to have different MSCW priorities for the tasks. Make sure to have at least two tasks for each priority.
+                        - Make sure to vary in your usage of Profile. Do not use the same Profile for every task.
 
 
                     Return the response in this JSON structure:
@@ -222,6 +224,8 @@ if uploaded_file:
                         )  # Parse JSON from the response
                         if "list_of_all_tasks" in df:
                             df = pd.json_normalize(df["list_of_all_tasks"])
+
+                            st.write(df)
 
                             # Export to CSV
                             csv_data = df.to_csv(index=False).encode("utf-8")
