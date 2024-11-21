@@ -193,127 +193,136 @@ def save_data_to_excel(fake_data, output_dir="export/fake data", file_prefix="fa
 st.title("DELAWARExHOWEST")
 st.subheader("AI-Driven Estimation")
 
-uploaded_file = st.file_uploader("Upload a PDF file", type=["pdf"])
-num_generate_files = st.number_input("Enter the number of projects to generate:", min_value=1, max_value=50, step=1)
+# Creating tabs for the app
+tabs = st.tabs(["Main page", "Test page"])
 
-if uploaded_file:
-    with st.spinner("Uploading and analyzing PDF..."):
-        pdf_url = upload_pdf_to_azure(uploaded_file)
+with tabs[0]:  # PDF Upload and Analysis tab
+    st.header("PDF Upload and Analysis")
 
-        if pdf_url:
-            extracted_text = analyze_pdf(pdf_url, is_url=True)
+    uploaded_file = st.file_uploader("Upload a PDF file", type=["pdf"])
 
-            if extracted_text:
-                st.success("PDF analysis complete!")
-                # st.text_area("Extracted Text", extracted_text, height=300)
+    if uploaded_file:
+        with st.spinner("Uploading and analyzing PDF..."):
+            pdf_url = upload_pdf_to_azure(uploaded_file)
 
-                # Prepare question for OpenAI
-                user_question = """
-                Your role is to analyze the project outline document, and for each task to estimate man-days, suggest fitting roles, and outline potential issues.
+            if pdf_url:
+                extracted_text = analyze_pdf(pdf_url, is_url=True)
 
-                Limit yourself to 10 detailed tasks for now. The tasks should be 1 specific task in the project. For example "Create the login screen for the web-app", and not "Frontend development".
+                if extracted_text:
+                    st.success("PDF analysis complete!")
+                    # st.text_area("Extracted Text", extracted_text, height=300)
 
-                Please generate detailed estimations in JSON format as shown below. Follow these guidelines, and don't include comments in the JSON structure:
+                    # Prepare question for OpenAI
+                    user_question = """
+                    Your role is to analyze the project outline document, and for each task to estimate man-days, suggest fitting roles, and outline potential issues.
 
+                    Limit yourself to 10 detailed tasks for now. The tasks should be 1 specific task in the project. For example "Create the login screen for the web-app", and not "Frontend development".
 
-                1. **MSCW**: The priority of the task. The options are: "1 Must Have", "2 Should Have", "3 Could Have"
-                2. **Area**: The area of the project where the task belongs. The options are: "01 Analyze & Design", "03 Setup", "04 Development"
-                3. **Module**: The software engineering domain of the task. The options are: "Overall", "Frontend", "Middleware", "Infra", "IoT", "Security"
-                4. **Feature**: What exactly is being done in the task. The options are: "General", "Technical Lead", "Project Manager", "Sprint Artifacts & Meetings", "Technical Analysis", "Functional Analysis", "User Experience (UX)", "User Interface (UI)", "Security Review", "Go-Live support", "Setup Environment + Azure", "Setup Projects", "Authentication & Authorizations", "Monitoring", "Notifications", "Settings" , "Filtering / search"
-                5. **Task**: Summarize the task in a detailed sentence or two.
-                6. **Profile**: The role of the person who will perform the task. The options are: "0 Blended FE dev", "0 Blended MW dev", "0 Blended Overall dev, 0 Blended XR dev", "1 Analyst", "2 Consultant Technical", "3 Senior Consultant Technical", "4 Lead Expert", "5 Manager", "6 Senior Manager", "7 DPH Consultant Technical", "8 DPH Senior Consultant Technical", "9 DPH Lead Expert/Manager"
-                7. **MinDays**: The estimated minimum number of days required to complete the task.
-                8. **RealDays**: The average or most likely number of days required to complete the task.
-                9. **MaxDays**: The estimated maximum number of days required to complete the task.
-                10. **Contingency**: for this write "I don't know what this feature means -HS"
-                11. **EstimatedDays**: this is a formula that calculates the estimated days based on the MinDays, RealDays, and MaxDays. The formula is: (MinDays + (4 * RealDays) + (4 * MaxDays)) / 9. Make sure to round up to the nearest whole number.
-                12. **EstimatedPrice**: this is a formula that calculates the estimated price based on the EstimatedDays and the cost of the Profile. For now use 200 as the cost per day. The formula is: EstimatedDays * 200.
-                13. **Potential Issues**: List potential risks or issues that might arise, such as “security concerns,” “data compliance requirements,” or “scope changes.”
-
-                
-                General pointers:
-                    - Keep the estimated days low. Anywhere from 0 for MinDays to 4 days for MaxDays is a good estimate.
-                    - It is possible for a task to be done within a day, so don't hesitate to use 0 for MinDays, and 0.5 for RealDays.
-                    - Make sure not to use the same Area for every task. Try to distribute the tasks across different Areas.
-                    - Make sure to use a wide variety of Profiles for the tasks. Don't use the same Profile for every task.
+                    Please generate detailed estimations in JSON format as shown below. Follow these guidelines, and don't include comments in the JSON structure:
 
 
-                Return the response in this JSON structure:
-                
-                ```json
-                {
-                    "list_of_all_tasks": [
-                        {
-                            "MSCW": "1 Must Have",
-                            "Area": "01 Analyze & Design",
-                            "Module": "Overall",
-                            "Feature": "General",
-                            "Task": "Task 1 description",
-                            "Profile": "1 Analyst",
-                            "MinDays": 1,
-                            "RealDays": 2,
-                            "MaxDays": 3,
-                            "Contingency": "I don't know what this feature means -HS",
-                            "EstimatedDays": 3,
-                            "EstimatedPrice": 600,
-                            "potential_issues": [
-                                "Issue 1",
-                                "Issue 2",
-                                "Issue 3"
-                            ]
-                        },
-                        // Additional tasks follow
-                    ]    
-                }
-                ```
-            """
+                    1. **MSCW**: The priority of the task. The options are: "1 Must Have", "2 Should Have", "3 Could Have"
+                    2. **Area**: The area of the project where the task belongs. The options are: "01 Analyze & Design", "03 Setup", "04 Development"
+                    3. **Module**: The software engineering domain of the task. The options are: "Overall", "Frontend", "Middleware", "Infra", "IoT", "Security"
+                    4. **Feature**: What exactly is being done in the task. The options are: "General", "Technical Lead", "Project Manager", "Sprint Artifacts & Meetings", "Technical Analysis", "Functional Analysis", "User Experience (UX)", "User Interface (UI)", "Security Review", "Go-Live support", "Setup Environment + Azure", "Setup Projects", "Authentication & Authorizations", "Monitoring", "Notifications", "Settings" , "Filtering / search"
+                    5. **Task**: Summarize the task in a detailed sentence or two.
+                    6. **Profile**: The role of the person who will perform the task. The options are: "0 Blended FE dev", "0 Blended MW dev", "0 Blended Overall dev, 0 Blended XR dev", "1 Analyst", "2 Consultant Technical", "3 Senior Consultant Technical", "4 Lead Expert", "5 Manager", "6 Senior Manager", "7 DPH Consultant Technical", "8 DPH Senior Consultant Technical", "9 DPH Lead Expert/Manager"
+                    7. **MinDays**: The estimated minimum number of days required to complete the task.
+                    8. **RealDays**: The average or most likely number of days required to complete the task.
+                    9. **MaxDays**: The estimated maximum number of days required to complete the task.
+                    10. **Contingency**: for this write "I don't know what this feature means -HS"
+                    11. **EstimatedDays**: this is a formula that calculates the estimated days based on the MinDays, RealDays, and MaxDays. The formula is: (MinDays + (4 * RealDays) + (4 * MaxDays)) / 9. Make sure to round up to the nearest whole number.
+                    12. **EstimatedPrice**: this is a formula that calculates the estimated price based on the EstimatedDays and the cost of the Profile. For now use 200 as the cost per day. The formula is: EstimatedDays * 200.
+                    13. **Potential Issues**: List potential risks or issues that might arise, such as “security concerns,” “data compliance requirements,” or “scope changes.”
 
-                with st.spinner("Querying OpenAI..."):
-                    answer = ask_openai(user_question, extracted_text)
-
-                if answer:
-                    st.success("OpenAI analysis complete!")
-                    # st.json(answer)
-
-                    # Save response to a JSON file
-                    json_file_path = "./response.json"
-                    with open(json_file_path, "w") as f:
-                        f.write(answer)
-
-                    # Convert JSON to DataFrame and export
-                    try:
-                        df = pd.read_json(json_file_path)
-                        if 'list_of_all_tasks' in df:
-                            df = pd.json_normalize(df['list_of_all_tasks'])
-
-                            # Export to CSV and download button
-                            df.to_csv('./export/response.csv', index=False)
-                            st.download_button(
-                                label="Download CSV",
-                                data=df.to_csv(index=False),
-                                file_name="response.csv",
-                                mime="text/csv"
-                            )
+                    
+                    General pointers:
+                        - Keep the estimated days low. Anywhere from 0 for MinDays to 4 days for MaxDays is a good estimate.
+                        - It is possible for a task to be done within a day, so don't hesitate to use 0 for MinDays, and 0.5 for RealDays.
+                        - Make sure not to use the same Area for every task. Try to distribute the tasks across different Areas.
+                        - Make sure to use a wide variety of Profiles for the tasks. Don't use the same Profile for every task.
 
 
-                            excel_buffer = io.BytesIO()
-                            with pd.ExcelWriter(excel_buffer, engine='openpyxl') as writer:
-                                df.to_excel(writer, index=False, sheet_name="Tasks")
-                            excel_buffer.seek(0)
+                    Return the response in this JSON structure:
+                    
+                    ```json
+                    {
+                        "list_of_all_tasks": [
+                            {
+                                "MSCW": "1 Must Have",
+                                "Area": "01 Analyze & Design",
+                                "Module": "Overall",
+                                "Feature": "General",
+                                "Task": "Task 1 description",
+                                "Profile": "1 Analyst",
+                                "MinDays": 1,
+                                "RealDays": 2,
+                                "MaxDays": 3,
+                                "Contingency": "I don't know what this feature means -HS",
+                                "EstimatedDays": 3,
+                                "EstimatedPrice": 600,
+                                "potential_issues": [
+                                    "Issue 1",
+                                    "Issue 2",
+                                    "Issue 3"
+                                ]
+                            },
+                            // Additional tasks follow
+                        ]    
+                    }
+                    ```
+                """
 
-                            st.download_button(
-                                label="Download Excel",
-                                data=excel_buffer,
-                                file_name="response.xlsx",
-                                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                            )
-                            
-                        else:
-                            st.error("Failed to extract tasks: Check the prompt or OpenAI response structure.")
-                    except Exception as e:
-                        st.error(f"Error while processing OpenAI response: {str(e)}")
-# Streamlit logic for generating multiple project files
-elif num_generate_files:
+                    with st.spinner("Querying OpenAI..."):
+                        answer = ask_openai(user_question, extracted_text)
+
+                    if answer:
+                        st.success("OpenAI analysis complete!")
+                        # st.json(answer)
+
+                        # Save response to a JSON file
+                        json_file_path = "./response.json"
+                        with open(json_file_path, "w") as f:
+                            f.write(answer)
+
+                        # Convert JSON to DataFrame and export
+                        try:
+                            df = pd.read_json(json_file_path)
+                            if 'list_of_all_tasks' in df:
+                                df = pd.json_normalize(df['list_of_all_tasks'])
+
+                                # Export to CSV and download button
+                                df.to_csv('./export/response.csv', index=False)
+                                st.download_button(
+                                    label="Download CSV",
+                                    data=df.to_csv(index=False),
+                                    file_name="response.csv",
+                                    mime="text/csv"
+                                )
+
+
+                                excel_buffer = io.BytesIO()
+                                with pd.ExcelWriter(excel_buffer, engine='openpyxl') as writer:
+                                    df.to_excel(writer, index=False, sheet_name="Tasks")
+                                excel_buffer.seek(0)
+
+                                st.download_button(
+                                    label="Download Excel",
+                                    data=excel_buffer,
+                                    file_name="response.xlsx",
+                                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                )
+                                
+                            else:
+                                st.error("Failed to extract tasks: Check the prompt or OpenAI response structure.")
+                        except Exception as e:
+                            st.error(f"Error while processing OpenAI response: {str(e)}")
+    
+with tabs[1]:  # Project Generation tab
+    st.header("Generate Fake Projects")
+    
+    num_generate_files = st.number_input("Enter the number of projects to generate:", min_value=1, max_value=50, step=1)
+    
     with st.spinner("Generating files..."):
 
         if st.button("Generate fake projects"):
@@ -334,4 +343,4 @@ elif num_generate_files:
 
                         # Optionally preview the first dataset
                         st.write("Generated Data preview:")
-                        st.dataframe(pd.DataFrame(fake_projects))  # Preview the first dataset
+                        st.dataframe(pd.DataFrame(fake_projects))  # Preview the first dataset      
