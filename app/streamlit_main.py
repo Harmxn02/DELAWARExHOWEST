@@ -41,7 +41,7 @@ def upload_pdf_to_azure(uploaded_file):
 
 
 def analyze_pdf(pdf_path_or_url, is_url=False):
-    analyze_url = f"{st.secrets["DOC_INTEL_ENDPOINT"]}/formrecognizer/documentModels/prebuilt-read:analyze?api-version=2023-07-31"
+    analyze_url = f"{st.secrets['DOC_INTEL_ENDPOINT']}/formrecognizer/documentModels/prebuilt-read:analyze?api-version=2023-07-31"
     headers = {
         "Content-Type": "application/json" if is_url else "application/octet-stream",
         "Ocp-Apim-Subscription-Key": st.secrets["DOC_INTEL_API_KEY"],
