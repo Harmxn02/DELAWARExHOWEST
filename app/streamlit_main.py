@@ -6,27 +6,36 @@ import streamlit as st
 from azure.storage.blob import BlobServiceClient, ContentSettings
 import io
 
+
 def upload_pdf_to_azure(uploaded_file):
     try:
         # Initialize the BlobServiceClient with the connection string
-        blob_service_client = BlobServiceClient.from_connection_string(st.secrets["AZURE_STORAGE_CONNECTION_STRING"])
-        
+        blob_service_client = BlobServiceClient.from_connection_string(
+            st.secrets["AZURE_STORAGE_CONNECTION_STRING"]
+        )
+
         # Get a client for the container
-        container_client = blob_service_client.get_container_client(st.secrets["AZURE_CONTAINER_NAME"])
-        
+        container_client = blob_service_client.get_container_client(
+            st.secrets["AZURE_CONTAINER_NAME"]
+        )
+
         # Ensure container exists, create if not
         if not container_client.exists():
             container_client.create_container()
 
         # Extract the filename from the uploaded file
         blob_name = uploaded_file.name
-        
+
         # Create a blob client for the file
         blob_client = container_client.get_blob_client(blob_name)
-        
+
         # Upload the file directly from the uploaded_file object
-        blob_client.upload_blob(uploaded_file, overwrite=True, content_settings=ContentSettings(content_type='application/pdf'))
-        
+        blob_client.upload_blob(
+            uploaded_file,
+            overwrite=True,
+            content_settings=ContentSettings(content_type="application/pdf"),
+        )
+
         # Construct the URL to the uploaded blob
         blob_url = f"https://{st.secrets['AZURE_STORAGE_ACCOUNT_NAME']}.blob.core.windows.net/{st.secrets['AZURE_CONTAINER_NAME']}/{blob_name}"
 
@@ -50,14 +59,18 @@ def analyze_pdf(pdf_path_or_url, is_url=False):
             data = {"urlSource": pdf_path_or_url}
             response = requests.post(analyze_url, headers=headers, json=data)
         else:
-            response = requests.post(analyze_url, headers=headers, data=pdf_path_or_url.read())
+            response = requests.post(
+                analyze_url, headers=headers, data=pdf_path_or_url.read()
+            )
 
         if response.status_code == 202:
             operation_location = response.headers["Operation-Location"]
             while True:
                 result_response = requests.get(
                     operation_location,
-                    headers={"Ocp-Apim-Subscription-Key": st.secrets["DOC_INTEL_API_KEY"]},
+                    headers={
+                        "Ocp-Apim-Subscription-Key": st.secrets["DOC_INTEL_API_KEY"]
+                    },
                 )
                 result_json = result_response.json()
 
@@ -67,7 +80,10 @@ def analyze_pdf(pdf_path_or_url, is_url=False):
 
             # Check if the analysis succeeded
             if result_json["status"] == "succeeded":
-                if "analyzeResult" in result_json and "content" in result_json["analyzeResult"]:
+                if (
+                    "analyzeResult" in result_json
+                    and "content" in result_json["analyzeResult"]
+                ):
                     return result_json["analyzeResult"]["content"]
                 else:
                     st.warning("No content found in the analysis response.")
@@ -81,13 +97,20 @@ def analyze_pdf(pdf_path_or_url, is_url=False):
 
 
 def ask_openai(question, context):
-    headers = {"Content-Type": "application/json", "api-key": st.secrets["OPENAI_API_KEY"]}
+    headers = {
+        "Content-Type": "application/json",
+        "api-key": st.secrets["OPENAI_API_KEY"],
+    }
 
-    messages = [{"role": "user", "content": f"Context:\n{context}\n\nQuestion: {question}"}]
+    messages = [
+        {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {question}"}
+    ]
     data = {"messages": messages, "max_tokens": 2000, "temperature": 0.7}
 
     try:
-        response = requests.post(st.secrets["OPENAI_ENDPOINT"], headers=headers, json=data)
+        response = requests.post(
+            st.secrets["OPENAI_ENDPOINT"], headers=headers, json=data
+        )
 
         if response.status_code == 200:
             return response.json()["choices"][0]["message"]["content"].strip()
@@ -97,24 +120,32 @@ def ask_openai(question, context):
     except Exception as e:
         st.error(f"An error occurred during OpenAI query: {str(e)}")
         return None
-    
-st.header("PDF Upload and Analysis")
+
+
+st.header("AI-Driven Project Estimation Tool")
+
+# Add session state to store results
+if "extracted_text" not in st.session_state:
+    st.session_state.extracted_text = None
+
+if "ai_response" not in st.session_state:
+    st.session_state.ai_response = None
 
 uploaded_file = st.file_uploader("Upload a PDF file", type=["pdf"])
 
 if uploaded_file:
-        with st.spinner("Uploading and analyzing PDF..."):
-            pdf_url = upload_pdf_to_azure(uploaded_file)
+    with st.spinner("Uploading and analyzing PDF..."):
+        pdf_url = upload_pdf_to_azure(uploaded_file)
 
-            if pdf_url:
-                extracted_text = analyze_pdf(pdf_url, is_url=True)
+        if pdf_url:
+            if st.session_state.extracted_text is None:
+                st.session_state.extracted_text = analyze_pdf(pdf_url, is_url=True)
 
-                if extracted_text:
-                    st.success("PDF analysis complete!")
-                    # st.text_area("Extracted Text", extracted_text, height=300)
+            if st.session_state.extracted_text:
+                st.success("PDF analysis complete!")
 
-                    # Prepare question for OpenAI
-                    user_question = """
+                # Prepare question for OpenAI
+                user_question = """
                     Your role is to analyze the project outline document, and for each task to estimate man-days, suggest fitting roles, and outline potential issues.
 
                     Limit yourself to 10 detailed tasks for now. The tasks should be 1 specific task in the project. For example "Create the login screen for the web-app", and not "Frontend development".
@@ -174,47 +205,50 @@ if uploaded_file:
                     ```
                 """
 
+                if st.session_state.ai_response is None:
                     with st.spinner("Querying OpenAI..."):
-                        answer = ask_openai(user_question, extracted_text)
+                        st.session_state.ai_response = ask_openai(
+                            user_question, st.session_state.extracted_text
+                        )
 
-                    if answer:
-                        st.success("OpenAI analysis complete!")
-                        # st.json(answer)
+                if st.session_state.ai_response:
+                    st.success("OpenAI analysis complete!")
 
-                        # Save response to a JSON file
-                        json_file_path = "./response.json"
-                        with open(json_file_path, "w") as f:
-                            f.write(answer)
+                    # Convert JSON to DataFrame and prepare download buttons
+                    try:
+                        response_data = st.session_state.ai_response
+                        df = pd.read_json(
+                            io.StringIO(response_data)
+                        )  # Parse JSON from the response
+                        if "list_of_all_tasks" in df:
+                            df = pd.json_normalize(df["list_of_all_tasks"])
 
-                        # Convert JSON to DataFrame and export
-                        try:
-                            df = pd.read_json(json_file_path)
-                            if 'list_of_all_tasks' in df:
-                                df = pd.json_normalize(df['list_of_all_tasks'])
+                            # Export to CSV
+                            csv_data = df.to_csv(index=False).encode("utf-8")
+                            st.download_button(
+                                label="Download CSV",
+                                data=csv_data,
+                                file_name="response.csv",
+                                mime="text/csv",
+                            )
 
-                                # Export to CSV and download button
-                                df.to_csv('./export/response.csv', index=False)
-                                st.download_button(
-                                    label="Download CSV",
-                                    data=df.to_csv(index=False),
-                                    file_name="response.csv",
-                                    mime="text/csv"
-                                )
+                            # Export to Excel
+                            excel_buffer = io.BytesIO()
+                            with pd.ExcelWriter(
+                                excel_buffer, engine="openpyxl"
+                            ) as writer:
+                                df.to_excel(writer, index=False, sheet_name="Tasks")
+                            excel_buffer.seek(0)
 
-
-                                excel_buffer = io.BytesIO()
-                                with pd.ExcelWriter(excel_buffer, engine='openpyxl') as writer:
-                                    df.to_excel(writer, index=False, sheet_name="Tasks")
-                                excel_buffer.seek(0)
-
-                                st.download_button(
-                                    label="Download Excel",
-                                    data=excel_buffer,
-                                    file_name="response.xlsx",
-                                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                                )
-                                
-                            else:
-                                st.error("Failed to extract tasks: Check the prompt or OpenAI response structure.")
-                        except Exception as e:
-                            st.error(f"Error while processing OpenAI response: {str(e)}")
+                            st.download_button(
+                                label="Download Excel",
+                                data=excel_buffer,
+                                file_name="response.xlsx",
+                                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                            )
+                        else:
+                            st.error(
+                                "Failed to extract tasks: Check the prompt or OpenAI response structure."
+                            )
+                    except Exception as e:
+                        st.error(f"Error while processing OpenAI response: {str(e)}")
