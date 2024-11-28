@@ -44,7 +44,7 @@ def generate_fake_project():
     min_days = rnd.randint(3, 7)
     most_likely_days = rnd.randint(min_days + 1, min_days + 3)
     max_days = rnd.randint(most_likely_days + 1, most_likely_days + 4)
-    contingency = f"Contingency info for {feature}"  # Example contingency text
+    contingency = "0%"  # Placeholder: This is currently low priority
     estimated_days = most_likely_days + 2  # Add buffer for estimated days
     estimated_price = estimated_days * 200  # Example price calculation
     potential_issues = rnd.sample(POTENTIAL_ISSUES, 2)  # Pick 2 rnd issues
