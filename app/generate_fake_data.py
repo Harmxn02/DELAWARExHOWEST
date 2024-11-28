@@ -53,22 +53,10 @@ def generate_fake_project():
     feature = rnd.choice(FEATURES)
     task = f"Task: {feature} for {module}"  # Example task description
 
-    num_roles = rnd.randint(1, 4)  # Number of roles to be assigned to a task
     profiles = {}
-    sum_people = 0
-
-    # Assign a random number of profiles for each role
-    for _ in range(num_roles):
-        num_people = rnd.randint(1, 4)  # Random number of assigned people per role
-        role = rnd.choice(PROFILES)
-        
-        # If role already exists in the profiles, add the people to the existing number
-        if role in profiles:
-            profiles[role] += num_people
-        else:
-            profiles[role] = num_people
-        
-        sum_people += num_people  # Will be used to multiply the time estimates
+    num_roles = rnd.randint(1, 4)
+    roles = rnd.sample(PROFILES, num_roles)  # Ensure distinct roles
+    profiles = {role: 1 for role in roles}  # Each role has exactly 1 person assigned
 
     # Time estimates
     min_days = rnd.randint(1, 4)
@@ -76,23 +64,23 @@ def generate_fake_project():
     max_days = rnd.randint(most_likely_days + 1, most_likely_days + 4)
     estimated_days = rnd.randint(min_days, max_days)  # Random value between min and max days
 
-    # Adjust time estimates for the amount of people working on a task
-    min_days *= sum_people
-    most_likely_days *= sum_people
-    max_days *= sum_people
-    estimated_days *= sum_people
+    # Adjust time estimates for the amount of roles involved in a task
+    min_days *= num_roles
+    most_likely_days *= num_roles
+    max_days *= num_roles
+    estimated_days *= num_roles
 
     contingency = "0%"  # Placeholder: This is currently low priority
-    potential_issues = rnd.sample(POTENTIAL_ISSUES, 2)  # Pick 2 random issues
+    potential_issues = rnd.sample(POTENTIAL_ISSUES, rnd.randint(1, 2))  # Pick 1 or 2 random issues
 
-    # Calculate cost based on profiles and each profile's assigned number
+    # Calculate cost based on roles and the amount of estimated days
     estimated_price = 0
-    for role, num_profiles in profiles.items():
+    for role in profiles.items():
         daily_cost = PROFILE_COSTS.get(role)
-        estimated_price += estimated_days * num_profiles * daily_cost
+        estimated_price += estimated_days * daily_cost
 
     # Combine profiles into a single string
-    profile_string = ", ".join([f"{num_profiles} {role}" for role, num_profiles in profiles.items()])
+    profile_string = ", ".join([f"{role}" for role in profiles])
 
     # Return a dictionary representing the row
     return {
