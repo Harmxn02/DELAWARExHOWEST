@@ -205,7 +205,7 @@ if uploaded_file:
                     7. **MinDays**: The estimated minimum number of days required to complete the task.
                     8. **RealDays**: The average or most likely number of days required to complete the task.
                     9. **MaxDays**: The estimated maximum number of days required to complete the task.
-                    10. **Contingency**: for this write "I don't know what this feature means -HS"
+                    10. **Contingency**: for this write "0" for now.
                     11. **EstimatedDays**: this is a formula that calculates the estimated days based on the MinDays, RealDays, and MaxDays. The formula is: (MinDays + (4 * RealDays) + (4 * MaxDays)) / 9. Make sure to round up to the nearest whole number.
                     12. **EstimatedPrice**: this is a formula that calculates the estimated price based on the EstimatedDays and the cost of the Profile. For now use 200 as the cost per day. The formula is: EstimatedDays * 200.
                     13. **Potential Issues**: List potential risks or issues that might arise, such as “security concerns,” “data compliance requirements,” or “scope changes.”
@@ -235,7 +235,7 @@ if uploaded_file:
                                 "MinDays": 1,
                                 "RealDays": 2,
                                 "MaxDays": 3,
-                                "Contingency": "I don't know what this feature means -HS",
+                                "Contingency": 0,
                                 "EstimatedDays": 3,
                                 "EstimatedPrice": 600,
                                 "potential_issues": [
