@@ -8,6 +8,20 @@ import io
 
 
 def upload_pdf_to_azure(uploaded_file):
+    """
+    Uploads a PDF file to an Azure Blob Storage container.
+    This function initializes a connection to Azure Blob Storage using the connection string
+    and container name from Streamlit secrets. It ensures the container exists, creates it if not,
+    and uploads the provided PDF file to the container. The function returns the URL of the uploaded
+    file or None if an error occurs.
+    Args:
+        uploaded_file (UploadedFile): The PDF file to be uploaded.
+    Returns:
+        str: The URL of the uploaded file if successful, None otherwise.
+    Raises:
+        Exception: If an error occurs during the upload process, an error message is displayed
+                   using Streamlit's error function.
+    """
     try:
         # Initialize the BlobServiceClient with the connection string
         blob_service_client = BlobServiceClient.from_connection_string(
@@ -48,6 +62,23 @@ def upload_pdf_to_azure(uploaded_file):
 
 
 def analyze_pdf(pdf_path_or_url, is_url=False):
+    """
+    Analyzes a PDF document using the Azure Form Recognizer service.
+    Args:
+        pdf_path_or_url (str): The file path or URL of the PDF document to be analyzed.
+        is_url (bool): A flag indicating whether the input is a URL (True) or a file path (False). Default is False.
+    Returns:
+        str or None: The extracted content from the PDF if the analysis is successful, otherwise None.
+    Raises:
+        Exception: If an error occurs during the PDF analysis process.
+    Notes:
+        - The function uses the Azure Form Recognizer service to analyze the PDF document.
+        - The service endpoint and API key are retrieved from Streamlit secrets.
+        - If the analysis is initiated successfully, the function polls the operation location until the analysis is complete.
+        - If the analysis succeeds, the extracted content is returned. If no content is found, a warning is displayed.
+        - If an error occurs during the process, an error message is displayed.
+    """
+
     analyze_url = f"{st.secrets['DOC_INTEL_ENDPOINT']}/formrecognizer/documentModels/prebuilt-read:analyze?api-version=2023-07-31"
     headers = {
         "Content-Type": "application/json" if is_url else "application/octet-stream",
@@ -97,6 +128,18 @@ def analyze_pdf(pdf_path_or_url, is_url=False):
 
 
 def ask_openai(question, context):
+    """
+    Sends a question to the OpenAI API with a given context and retrieves the response.
+    Args:
+        question (str): The question to ask the OpenAI API.
+        context (str): The context to provide to the OpenAI API for better understanding of the question.
+    Returns:
+        str: The response from the OpenAI API if the request is successful.
+        None: If there is an error in the request or an exception occurs.
+    Raises:
+        Exception: If an error occurs during the API request.
+    """
+
     headers = {
         "Content-Type": "application/json",
         "api-key": st.secrets["OPENAI_API_KEY"],
