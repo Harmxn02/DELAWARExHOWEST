@@ -58,10 +58,10 @@ def generate_fake_project():
     selected_profiles = [rnd.choice(PROFILES) for _ in range(num_profiles)]
 
     # Time estimates
-    min_days = rnd.randint(3, 7)
+    min_days = rnd.randint(1, 4)
     most_likely_days = rnd.randint(min_days + 1, min_days + 3)
     max_days = rnd.randint(most_likely_days + 1, most_likely_days + 4)
-    estimated_days = most_likely_days + 2  # Add buffer for estimated days
+    estimated_days = rnd.randint(min_days, max_days) # Pick random value between min and max days
 
     # Adjust time estimates for multiple profiles
     min_days *= num_profiles
