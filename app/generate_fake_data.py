@@ -53,15 +53,31 @@ def generate_fake_project():
     module = rnd.choice(MODULES)
     feature = rnd.choice(FEATURES)
     task = f"Task: {feature} for {module}"  # Example task description
-    num_profile = rnd.randint(1, 4)  # Needed for adjusting the price and amount of days
-    profile = f"{num_profile} {rnd.choice(PROFILES)}"
-    min_days = rnd.randint(3, 7) * num_profile
+    num_profiles = rnd.randint(1, 4)  # Needed for adjusting the price and amount of days
+    profile = f"{num_profiles} {rnd.choice(PROFILES)}"
+
+    # Time estimates
+    min_days = rnd.randint(3, 7)
     most_likely_days = rnd.randint(min_days + 1, min_days + 3)
     max_days = rnd.randint(most_likely_days + 1, most_likely_days + 4)
-    contingency = "0%"  # Placeholder: This is currently low priority
     estimated_days = most_likely_days + 2  # Add buffer for estimated days
+
+    # Adjust time estimates based on the number of profiles
+    min_days *= num_profiles
+    most_likely_days *= num_profiles
+    max_days *= num_profiles
+    estimated_days *= num_profiles
+
+    contingency = "0%"  # Placeholder: This is currently low priority
     estimated_price = estimated_days * 200  # Example price calculation
     potential_issues = rnd.sample(POTENTIAL_ISSUES, 2)  # Pick 2 rnd issues
+
+    # Calculate cost based on profiles
+    total_price = 0
+    for profile in profile:
+        role = profile.split(' ', 1)[-1]  # Extract role name
+        daily_cost = PROFILE_COSTS.get(role, 200)  # Default cost is 200
+        total_price += estimated_days * daily_cost
     
     # Return a dictionary representing the row
     return {
