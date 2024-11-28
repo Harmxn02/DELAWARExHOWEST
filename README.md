@@ -120,3 +120,15 @@ AZURE_STORAGE_ACCOUNT_NAME = "placeholder"
 AZURE_CONTAINER_NAME = "placeholder"
 AZURE_STORAGE_CONNECTION_STRING = "placeholder"
 ```
+
+#### Step 4. Run the streamlit application
+
+Run the following command:
+
+Make sure you are inside the `.\app\` directory and run the following command:
+
+```bash
+streamlit run streamlit_main.py
+```
+
+If you are not inside the `.\app\` directory, the streamlit application will not find the secrets.toml file because that is stored inside the `.\app\`-directory.
