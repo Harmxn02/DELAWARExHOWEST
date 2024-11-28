@@ -35,13 +35,27 @@ POTENTIAL_ISSUES = [
 
 # Generate a single random project entry
 def generate_fake_project():
+    # Define the cost per profile
+    PROFILE_COSTS = {
+        "Consultant Technical": 250,
+        "Senior Consultant Technical": 300,
+        "Blended FE dev": 200,
+        "Blended MW dev": 220,
+        "Fullstack Developer": 240,
+        "UI Designer": 180,
+        "Project Manager": 400,
+        "Quality Assurance Engineer": 220,
+        "Lead Expert": 500
+    }
+
     mscw = rnd.choice(MSCW_OPTIONS)
     area = rnd.choice(AREAS)
     module = rnd.choice(MODULES)
     feature = rnd.choice(FEATURES)
     task = f"Task: {feature} for {module}"  # Example task description
-    profile = f"{rnd.randint(1, 4)} {rnd.choice(PROFILES)}"
-    min_days = rnd.randint(3, 7)
+    num_profile = rnd.randint(1, 4)  # Needed for adjusting the price and amount of days
+    profile = f"{num_profile} {rnd.choice(PROFILES)}"
+    min_days = rnd.randint(3, 7) * num_profile
     most_likely_days = rnd.randint(min_days + 1, min_days + 3)
     max_days = rnd.randint(most_likely_days + 1, most_likely_days + 4)
     contingency = "0%"  # Placeholder: This is currently low priority
