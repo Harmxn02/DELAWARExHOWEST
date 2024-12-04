@@ -53,7 +53,7 @@ def upload_pdf_to_azure(uploaded_file):
         # Construct the URL to the uploaded blob
         blob_url = f"https://{st.secrets['AZURE_STORAGE_ACCOUNT_NAME']}.blob.core.windows.net/{st.secrets['AZURE_CONTAINER_NAME']}/{blob_name}"
 
-        st.success(f"Upload successful. File URL: {blob_url}")
+        st.success(f"Upload successful. File URL: {blob_url}")        
         return blob_url
 
     except Exception as e:
@@ -139,6 +139,35 @@ def ask_openai(question, context):
     Raises:
         Exception: If an error occurs during the API request.
     """
+    
+    
+    ### TODO: Implement AI Search to get files from our knowledge base
+    ### For now, simply print out the names of the files in the container
+    
+    # Initialize the BlobServiceClient with the connection string
+    blob_service_client = BlobServiceClient.from_connection_string(
+        st.secrets["AZURE_STORAGE_CONNECTION_STRING"]
+    )
+    
+    # Get a client for the container
+    container_client = blob_service_client.get_container_client(
+        st.secrets["AZURE_KNOWLEDGE_BASE_CONTAINER_NAME"]
+    )
+    
+    # List all blobs in the knowledge base container
+    knowledge_base_blob_list = container_client.list_blobs()
+    
+    st.write("### Files in the knowledge base:")
+    for blob in knowledge_base_blob_list:
+        # write blobs as list items
+        st.write(f"- {blob.name}")
+    
+    
+    
+    
+    
+    
+    
 
     headers = {
         "Content-Type": "application/json",
