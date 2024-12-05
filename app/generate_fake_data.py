@@ -39,8 +39,13 @@ ROLE_COSTS = {
     "Lead Expert": 500
 }
 
+# Initialize the global issue counter
+issue_counter = 0
+
 # Generate a single random task
 def generate_fake_task():
+    global issue_counter  # Declare global to update the issue counter
+
     mscw = rnd.choice(MSCW_OPTIONS)
     area = rnd.choice(AREAS)
     module = rnd.choice(MODULES)
@@ -56,10 +61,15 @@ def generate_fake_task():
 
     # Calculate cost for the random role
     daily_cost = ROLE_COSTS.get(role)
-    estimated_price = estimated_days * daily_cost  # Cost for the single role
+    estimated_price = estimated_days * daily_cost  # Cost for the role
 
     contingency = "0%"  # Placeholder: This is currently low priority
-    potential_issues = rnd.sample(POTENTIAL_ISSUES, rnd.randint(1, 2))  # Pick 1 or 2 random issues
+
+    # Add an issue once every 20th task
+    potential_issue = ""
+    issue_counter += 1
+    if issue_counter % 20 == 0:
+        potential_issue = rnd.sample(POTENTIAL_ISSUES, 1)  # Pick 1 random issue
 
     # Return a dictionary representing the task
     return {
@@ -75,15 +85,14 @@ def generate_fake_task():
         "Contingency": contingency,
         "EstimatedDays": estimated_days,
         "EstimatedPrice": estimated_price,
-        "potential_issues": potential_issues,
+        "potential_issues": potential_issue,
     }
 
 # Generate a dataset with multiple projects, each with a random number of tasks
 def generate_dataset(num_projects):
     dataset = []
     for _ in range(num_projects):
-        # Random number of tasks per project (between 5 and 22)
-        num_tasks = rnd.randint(5, 22)
+        num_tasks = rnd.randint(5, 22)  # Random number of tasks per project (between 5 and 22)
         project_tasks = [generate_fake_task() for _ in range(num_tasks)]  # Generate the tasks
         dataset.append(project_tasks)  # Add tasks to the dataset as a list of tasks
     return dataset
@@ -137,3 +146,4 @@ with st.spinner("Generating files..."):
                     # Optionally preview the first dataset
                     st.write("Generated Data preview:")
                     st.dataframe(pd.DataFrame(fake_projects[0]))  # Preview the first project
+                    
