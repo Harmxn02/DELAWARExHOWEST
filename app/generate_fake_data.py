@@ -3,7 +3,6 @@ import pandas as pd
 import streamlit as st
 import random as rnd
 from datetime import datetime
-from collections import defaultdict
 
 #region Generate fake data and store in Azure storageaccount
 
@@ -22,18 +21,13 @@ FEATURES = [
     "Authentication & Authorizations", "Filtering / search", "Notifications", 
     "Appointment Scheduling System", "Security Review", "Settings"
 ]
-PROFILES = [
-    "Consultant Technical", "Senior Consultant Technical", "Blended FE dev", 
-    "Blended MW dev", "Fullstack Developer", "UI Designer", "Project Manager", 
-    "Quality Assurance Engineer", "Lead Expert"
-]
 POTENTIAL_ISSUES = [
     "Scope creep", "Integration issues with Azure", "Cross-browser compatibility issues", 
     "Usability challenges", "API security vulnerabilities", "Performance issues", 
     "Security vulnerabilities", "Calendar integration errors"
 ]
-# Define the cost per profile
-PROFILE_COSTS = {
+# Define a cost per role
+ROLE_COSTS = {
         "Consultant Technical": 250,
         "Senior Consultant Technical": 300,
         "Blended FE dev": 200,
@@ -52,11 +46,7 @@ def generate_fake_project():
     module = rnd.choice(MODULES)
     feature = rnd.choice(FEATURES)
     task = f"Task: {feature} for {module}"  # Example task description
-
-    profiles = {}
-    num_roles = rnd.randint(1, 4)
-    roles = rnd.sample(PROFILES, num_roles)  # Ensure distinct roles
-    profiles = {role: 1 for role in roles}  # Each role has exactly 1 person assigned
+    role = rnd.choice(list(ROLE_COSTS.keys()))  # Randomly choose a role
 
     # Time estimates
     min_days = rnd.randint(1, 4)
@@ -64,23 +54,12 @@ def generate_fake_project():
     max_days = rnd.randint(most_likely_days + 1, most_likely_days + 4)
     estimated_days = rnd.randint(min_days, max_days)  # Random value between min and max days
 
-    # Adjust time estimates for the amount of roles involved in a task
-    min_days *= num_roles
-    most_likely_days *= num_roles
-    max_days *= num_roles
-    estimated_days *= num_roles
+    # Calculate cost for the random role
+    daily_cost = ROLE_COSTS.get(role)
+    estimated_price = estimated_days * daily_cost  # Cost for the single role
 
     contingency = "0%"  # Placeholder: This is currently low priority
     potential_issues = rnd.sample(POTENTIAL_ISSUES, rnd.randint(1, 2))  # Pick 1 or 2 random issues
-
-    # Calculate cost based on roles and the amount of estimated days
-    estimated_price = 0
-    for role in profiles.items():
-        daily_cost = PROFILE_COSTS.get(role)
-        estimated_price += estimated_days * daily_cost
-
-    # Combine profiles into a single string
-    profile_string = ", ".join([f"{role}" for role in profiles])
 
     # Return a dictionary representing the row
     return {
@@ -89,7 +68,7 @@ def generate_fake_project():
         "Module": module,
         "Feature": feature,
         "Task": task,
-        "Profile": profile_string,
+        "Profile": role,
         "MinDays": min_days,
         "RealDays": most_likely_days,
         "MaxDays": max_days,
