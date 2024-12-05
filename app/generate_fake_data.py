@@ -28,19 +28,19 @@ POTENTIAL_ISSUES = [
 ]
 # Define a cost per role
 ROLE_COSTS = {
-        "Consultant Technical": 250,
-        "Senior Consultant Technical": 300,
-        "Blended FE dev": 200,
-        "Blended MW dev": 220,
-        "Fullstack Developer": 240,
-        "UI Designer": 180,
-        "Project Manager": 400,
-        "Quality Assurance Engineer": 220,
-        "Lead Expert": 500
-    }
+    "Consultant Technical": 250,
+    "Senior Consultant Technical": 300,
+    "Blended FE dev": 200,
+    "Blended MW dev": 220,
+    "Fullstack Developer": 240,
+    "UI Designer": 180,
+    "Project Manager": 400,
+    "Quality Assurance Engineer": 220,
+    "Lead Expert": 500
+}
 
-# Generate a single random project entry
-def generate_fake_project():
+# Generate a single random task
+def generate_fake_task():
     mscw = rnd.choice(MSCW_OPTIONS)
     area = rnd.choice(AREAS)
     module = rnd.choice(MODULES)
@@ -61,7 +61,7 @@ def generate_fake_project():
     contingency = "0%"  # Placeholder: This is currently low priority
     potential_issues = rnd.sample(POTENTIAL_ISSUES, rnd.randint(1, 2))  # Pick 1 or 2 random issues
 
-    # Return a dictionary representing the row
+    # Return a dictionary representing the task
     return {
         "MSCW": mscw,
         "Area": area,
@@ -78,26 +78,32 @@ def generate_fake_project():
         "potential_issues": potential_issues,
     }
 
-# Generate a dataset with fake projects
+# Generate a dataset with multiple projects, each with a random number of tasks
 def generate_dataset(num_projects):
-    return [generate_fake_project() for _ in range(num_projects)]
+    dataset = []
+    for _ in range(num_projects):
+        # Random number of tasks per project (between 5 and 22)
+        num_tasks = rnd.randint(5, 22)
+        project_tasks = [generate_fake_task() for _ in range(num_tasks)]  # Generate the tasks
+        dataset.append(project_tasks)  # Add tasks to the dataset as a list of tasks
+    return dataset
 
-# Save the dataset to an Excel file
-def save_data_to_excel(fake_data, output_dir="export/fake data", file_prefix="fake_project_"):
+# Save the dataset to an Excel file for each project
+def save_data_to_excel(fake_data, output_dir="export/fake_data", file_prefix="fake_project_"):
     os.makedirs(output_dir, exist_ok=True)  # Create the directory if it doesn't exist
 
     # Initialize a list to hold the file paths of the generated files
     saved_file_paths = []
 
     # Loop through and generate a file for each project batch
-    for i in range(len(fake_data)):
+    for i, project in enumerate(fake_data):
         # Generate a unique filename based on the current timestamp + index
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         file_name = f"{file_prefix}{timestamp}_{i + 1}.xlsx"
         output_path = os.path.join(output_dir, file_name)
 
         # Save to Excel
-        df = pd.DataFrame(fake_data[i])  # Each element in fake_data is a list of project data
+        df = pd.DataFrame(project)  # Each element in fake_data is a list of project data
         df.to_excel(output_path, index=False)
         saved_file_paths.append(output_path)
         print(f"Fake data project created at: {output_path}")
@@ -106,12 +112,12 @@ def save_data_to_excel(fake_data, output_dir="export/fake data", file_prefix="fa
 
 #endregion
 
+# Streamlit interface
 st.header("Generate Fake Projects")
 
 num_generate_files = st.number_input("Enter the number of projects to generate:", min_value=1, max_value=50, step=1)
 
 with st.spinner("Generating files..."):
-
     if st.button("Generate fake projects"):
         fake_projects = generate_dataset(num_generate_files)
 
@@ -119,15 +125,15 @@ with st.spinner("Generating files..."):
             st.success(f"Fake project(s) successfully generated! ({num_generate_files} projects)")
 
             with st.spinner("Saving files..."):
-                # Save files, the new function now supports generating multiple files
-                output_paths = save_data_to_excel([fake_projects] * num_generate_files)  # Generate separate files for each project
+                # Save files, now correctly generating separate files for each project
+                output_paths = save_data_to_excel(fake_projects)  # Generate separate files for each project
 
                 if output_paths:
                     st.success(f"Generated {num_generate_files} fake project file(s)!")
-                    
+
                     # Show a list of saved files
                     st.write(f"Generated files: {output_paths}")
 
                     # Optionally preview the first dataset
                     st.write("Generated Data preview:")
-                    st.dataframe(pd.DataFrame(fake_projects))  # Preview the first dataset      
+                    st.dataframe(pd.DataFrame(fake_projects[0]))  # Preview the first project
