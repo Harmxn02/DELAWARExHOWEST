@@ -6,6 +6,7 @@ import streamlit as st
 from azure.storage.blob import BlobServiceClient, ContentSettings
 import io
 
+import json
 
 def upload_pdf_to_azure(uploaded_file):
     """
@@ -299,15 +300,6 @@ if uploaded_file:
 
                             st.write(df)
 
-                            # Export to CSV
-                            csv_data = df.to_csv(index=False).encode("utf-8")
-                            st.download_button(
-                                label="Download CSV",
-                                data=csv_data,
-                                file_name="response.csv",
-                                mime="text/csv",
-                            )
-
                             # Export to Excel
                             excel_buffer = io.BytesIO()
                             with pd.ExcelWriter(
@@ -322,6 +314,18 @@ if uploaded_file:
                                 file_name="response.xlsx",
                                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                             )
+                            
+
+                            # Export to profiles to JSON
+                            profile_data = df["Profile"].to_json(index=False).encode("utf-8")
+                            st.download_button(
+                                label="Export Profiles to JSON",
+                                data=profile_data,
+                                file_name="project_profiles.json",
+                                mime="text/json",
+                            )
+                            
+                            
                         else:
                             st.error(
                                 "Failed to extract tasks: Check the prompt or OpenAI response structure."
