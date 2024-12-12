@@ -4,3 +4,4 @@ pandas
 openpyxl
 requests
 pymysql
+azure-search-documents
