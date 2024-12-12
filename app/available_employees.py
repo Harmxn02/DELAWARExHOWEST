@@ -15,10 +15,12 @@ uploaded_file = st.file_uploader("Choose a JSON file", type="json")
 
 def get_db_connection():
     return mysql.connector.connect(
-        host=str(st.secrets["AE_db_host"]),
-        user=str(st.secrets["AE_db_user"]),
-        password=str(st.secrets["AE_db_password"]),
-        database=str(st.secrets["AE_db_name"])
+        host=str(st.secrets["AZ_db_host"]),
+        user=str(st.secrets["AZ_db_user"]),
+        password=str(st.secrets["AZ_db_password"]),
+        database=str(st.secrets["AZ_db_name"]),
+        # port=str(st.secrets["AZ_db_port"]),
+        # ssl_disabled=True
     )
 
 
