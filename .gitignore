@@ -17,3 +17,4 @@ app/.streamlit/secrets.toml
 
 # Ignore generated files from the streamlit application called 'generate_fake_data.py'
 app/export/fake data/
+.env
