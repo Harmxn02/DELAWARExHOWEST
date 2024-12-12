@@ -98,9 +98,13 @@ def generate_dataset(num_projects):
         dataset.append(project_tasks)  # Add tasks to the dataset as a list of tasks
     return dataset
 
-# Save the dataset to an Excel file for each project
-def save_data_to_excel_and_json(fake_data, output_dir="export/fake_data", file_prefix="fake_project_"):
-    os.makedirs(output_dir, exist_ok=True)  # Create the directory if it doesn't exist
+# Save the dataset to Excel and JSON files, separated into their respective folders
+def save_data_to_excel_and_json(fake_data, output_dir="export", file_prefix="fake_project_"):
+    # Create separate directories for Excel and JSON files
+    excel_dir = os.path.join(output_dir, "fake_data_excel")
+    json_dir = os.path.join(output_dir, "fake_data_json")
+    os.makedirs(excel_dir, exist_ok=True)
+    os.makedirs(json_dir, exist_ok=True)
 
     # Initialize a list to hold the file paths of the generated files
     saved_file_paths = []
@@ -113,7 +117,7 @@ def save_data_to_excel_and_json(fake_data, output_dir="export/fake_data", file_p
 
         # Save to Excel
         excel_file_name = f"{file_name_prefix}.xlsx"
-        excel_output_path = os.path.join(output_dir, excel_file_name)
+        excel_output_path = os.path.join(excel_dir, excel_file_name)
         df = pd.DataFrame(project)  # Each element in fake_data is a list of project data
         df.to_excel(excel_output_path, index=False)
         saved_file_paths.append(excel_output_path)
@@ -121,7 +125,7 @@ def save_data_to_excel_and_json(fake_data, output_dir="export/fake_data", file_p
 
         # Save to JSON
         json_file_name = f"{file_name_prefix}.json"
-        json_output_path = os.path.join(output_dir, json_file_name)
+        json_output_path = os.path.join(json_dir, json_file_name)
         with open(json_output_path, "w") as json_file:
             json.dump(project, json_file, indent=4)  # Write the project data as JSON
         saved_file_paths.append(json_output_path)
