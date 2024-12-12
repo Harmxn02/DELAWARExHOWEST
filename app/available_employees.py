@@ -1,3 +1,10 @@
+"""
+DEPRECATED:
+    This Streamlit application is no longer used, and it's
+    functionalities have been implemented in the `team_planning_platform.py`
+    Streamlit application under the "Available Employees" tab.
+"""
+
 import streamlit as st
 import json
 import mysql.connector
