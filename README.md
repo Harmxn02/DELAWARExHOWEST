@@ -1,8 +1,8 @@
-# DELAWARExHOWEST - AI-driven Project Estimations Application
+# DELAWARExHOWEST - AI-driven Project Estimations and Team Planning Platform
 
 ## Overview
 
-The **AI-Driven Project Estimation Application** is designed to help software engineering teams estimate the development effort required for a project based on detailed project descriptions provided in PDF format. The applications reads in a PDF-file describing a project (including tasks, tools, frameworks, etc.) and generates estimations for each task in terms of:
+The **AI-driven Project Estimations and Team Planning Platform** is designed to help software engineering teams estimate the development effort required for a project based on detailed project descriptions provided in PDF format. The applications reads in a PDF-file describing a project (including tasks, tools, frameworks, etc.) and generates estimations for each task in terms of:
 
 1. **MSCW**: The priority of the task.
 1. **Area**: The area of the project where the task belongs.
@@ -18,54 +18,16 @@ The **AI-Driven Project Estimation Application** is designed to help software en
 1. **EstimatedPrice**
 1. **Potential Issues**
 
-These estimations are returned in a structured JSON format, which is read into the Web App.
+## Workflow
 
-## Example JSON output
-
-The script returns a structured JSON output with estimated details for each task in the project, similar to the example below:
-
-```json
-{
-    "list_of_all_tasks": [
-        {
-            "MSCW": "1 Must Have",
-            "Area": "01 Analyze & Design",
-            "Module": "Overall",
-            "Feature": "Technical Analysis",
-            "Task": "Gather requirements from RealEstateCo stakeholders and develop project scope document",
-            "Profile": "1 Analyst",
-            "MinDays": 2,
-            "RealDays": 4,
-            "MaxDays": 6,
-            "Contingency": "I don't know what this feature means -HS",
-            "EstimatedDays": 5,
-            "EstimatedPrice": 1000,
-            "potential_issues": [
-                "Scope changes",
-                "Lack of clarity in requirements"
-            ]
-        },
-        {
-            "MSCW": "1 Must Have",
-            "Area": "01 Analyze & Design",
-            "Module": "Overall",
-            "Feature": "Functional Analysis",
-            "Task": "Create functional specifications document for the platform",
-            "Profile": "2 Consultant Technical",
-            "MinDays": 2,
-            "RealDays": 3,
-            "MaxDays": 4,
-            "Contingency": "I don't know what this feature means -HS",
-            "EstimatedDays": 4,
-            "EstimatedPrice": 800,
-            "potential_issues": [
-                "Scope changes",
-                "Lack of clarity in requirements"
-            ]
-        },
-    ]
-}
-```
+1. You will start by uploading a PDF file in the **Project Estimation Tool**. This tool will generate estimations for you, using an outline (a PDF file) of your project.
+2. After having generated the estimations you can now press the `Export Profiles to JSON` button, which contains all employee's roles you will need for the project.
+3. Moving over to the **Team Planning Platform**, where you can plan your project
+    - **Tab 1 - Add Project**: Give your project a name and press `Add Project`
+    - **Tab 2 - View Projects**: Refresh the page. If your project was made succesfully you should see your project in the list
+    - **Tab 3 - View Employees**: Upload the `project_profiles.json` file you exported on the **Project Estimation Tool** page here. Once you upload it, you will see a list of all roles your project requires according to our estimation tool. Below, you can see all employees and their roles, you can filter by role to find the employees you need.
+    - **Tab 4 - Assign Project**: Now you can assign employees to your project by typing the employee's name in the search bar, and selecting the newly made project, and then pressing the `Assign Project` button
+    - **Tab 5 - Close Project** (optional): Once your project has finalised, you can close the project. This will set the project to `inactive` in the database, but does not delete it. Closing a project makes all assigned employees available again.
 
 ## Technologies used
 
