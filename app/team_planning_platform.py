@@ -150,8 +150,18 @@ with tabs[2]:
 with tabs[3]:
     st.header("Assign Project")
     if not employees.empty and not projects.empty:
-        employee_id = st.selectbox("Select Employee", options=employees["id"], format_func=lambda x: employees.loc[employees["id"] == x, "email"].values[0], key="employee_id")
-        project_id = st.selectbox("Select Project", options=projects["id"], format_func=lambda x: projects.loc[projects["id"] == x, "projectTitle"].values[0], key="project_id")
+        employee_id = st.selectbox(
+            "Select Employee", 
+            options=employees["id"], 
+            format_func=lambda x: f"{employees.loc[employees['id'] == x, 'firstname'].values[0]} {employees.loc[employees['id'] == x, 'lastname'].values[0]} [{employees.loc[employees['id'] == x, 'role'].values[0]}]", 
+            key="employee_id"
+        )
+        project_id = st.selectbox(
+            "Select Project", 
+            options=projects["id"], 
+            format_func=lambda x: projects.loc[projects['id'] == x, 'projectTitle'].values[0], 
+            key="project_id"
+        )
 
         if st.button("Assign Project"):
             assign_project(employee_id, project_id)
