@@ -6,8 +6,17 @@ import json
 st.set_page_config(layout="wide", page_title="Team Planning Platform")
 st.title("Team Planning Platform")
 
-# Function to Create Database Connection
 def create_connection():
+    """
+    Establishes a connection to the MySQL database using credentials stored in Streamlit secrets.
+
+    Returns:
+        pymysql.connections.Connection: A connection object to the MySQL database if successful.
+        None: If the connection attempt fails.
+
+    Raises:
+        pymysql.MySQLError: If there is an error connecting to the MySQL database.
+    """
     try:
         connection = pymysql.connect(
             host=str(st.secrets["AZ_db_host"]),
@@ -20,8 +29,14 @@ def create_connection():
         st.error(f"Failed to connect to the database: {e}")
         return None
 
-# Function to Fetch Employees
 def fetch_employees():
+    """
+    Fetches a list of available employees from the database.
+
+    Returns:
+        pd.DataFrame: A DataFrame containing the list of available employees, ordered by role and last name. 
+                      If an error occurs, an empty DataFrame is returned.
+    """
     connection = create_connection()
     if connection:
         try:
@@ -33,8 +48,13 @@ def fetch_employees():
             st.error(f"Failed to fetch employees: {e}")
     return pd.DataFrame()
 
-# Function to Fetch Projects
 def fetch_projects():
+    """
+    Fetches active projects from the database.
+
+    Returns:
+        pd.DataFrame: A DataFrame containing the active projects, or an empty DataFrame if an error occurs.
+    """
     connection = create_connection()
     if connection:
         try:
@@ -46,8 +66,17 @@ def fetch_projects():
             st.error(f"Failed to fetch projects: {e}")
     return pd.DataFrame()
 
-# Function to Assign Project to Employee
 def assign_project(employee_id, project_id):
+    """
+    Assigns a project to an employee by inserting a record into the project_assignments table.
+
+    Args:
+        employee_id (int): The ID of the employee to whom the project is being assigned.
+        project_id (int): The ID of the project being assigned.
+
+    Raises:
+        Exception: If there is an error during the database operation, an exception is raised and an error message is displayed.
+    """
     connection = create_connection()
     if connection:
         try:
@@ -61,8 +90,16 @@ def assign_project(employee_id, project_id):
         finally:
             connection.close()
 
-# Function to Add New Project
 def add_project(project_title):
+    """
+    Adds a new project to the database with the given project title.
+
+    Args:
+        project_title (str): The title of the project to be added.
+
+    Raises:
+        Exception: If there is an error while adding the project to the database.
+    """
     connection = create_connection()
     if connection:
         try:
@@ -77,8 +114,16 @@ def add_project(project_title):
         finally:
             connection.close()
 
-# Function to Delete (Close) Project
 def delete_project(project_title):
+    """
+    Marks a project as inactive in the database.
+
+    Args:
+        project_title (str): The title of the project to be marked as inactive.
+
+    Raises:
+        Exception: If there is an error while updating the project status in the database.
+    """
     connection = create_connection()
     if connection:
         try:
