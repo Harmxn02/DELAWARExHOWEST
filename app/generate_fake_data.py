@@ -3,6 +3,7 @@ import pandas as pd
 import streamlit as st
 import random as rnd
 from datetime import datetime
+import json
 
 #region Generate fake data and store in Azure storageaccount
 
@@ -98,7 +99,7 @@ def generate_dataset(num_projects):
     return dataset
 
 # Save the dataset to an Excel file for each project
-def save_data_to_excel(fake_data, output_dir="export/fake_data", file_prefix="fake_project_"):
+def save_data_to_excel_and_json(fake_data, output_dir="export/fake_data", file_prefix="fake_project_"):
     os.makedirs(output_dir, exist_ok=True)  # Create the directory if it doesn't exist
 
     # Initialize a list to hold the file paths of the generated files
@@ -108,14 +109,23 @@ def save_data_to_excel(fake_data, output_dir="export/fake_data", file_prefix="fa
     for i, project in enumerate(fake_data):
         # Generate a unique filename based on the current timestamp + index
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        file_name = f"{file_prefix}{timestamp}_{i + 1}.xlsx"
-        output_path = os.path.join(output_dir, file_name)
+        file_name_prefix = f"{file_prefix}{timestamp}_{i + 1}"
 
         # Save to Excel
+        excel_file_name = f"{file_name_prefix}.xlsx"
+        excel_output_path = os.path.join(output_dir, excel_file_name)
         df = pd.DataFrame(project)  # Each element in fake_data is a list of project data
-        df.to_excel(output_path, index=False)
-        saved_file_paths.append(output_path)
-        print(f"Fake data project created at: {output_path}")
+        df.to_excel(excel_output_path, index=False)
+        saved_file_paths.append(excel_output_path)
+        print(f"Fake data project saved to Excel at: {excel_output_path}")
+
+        # Save to JSON
+        json_file_name = f"{file_name_prefix}.json"
+        json_output_path = os.path.join(output_dir, json_file_name)
+        with open(json_output_path, "w") as json_file:
+            json.dump(project, json_file, indent=4)  # Write the project data as JSON
+        saved_file_paths.append(json_output_path)
+        print(f"Fake data project saved to JSON at: {json_output_path}")
 
     return saved_file_paths  # Return the paths of all saved files
 
@@ -134,8 +144,8 @@ with st.spinner("Generating files..."):
             st.success(f"Fake project(s) successfully generated! ({num_generate_files} projects)")
 
             with st.spinner("Saving files..."):
-                # Save files, now correctly generating separate files for each project
-                output_paths = save_data_to_excel(fake_projects)  # Generate separate files for each project
+                # Save files, now generating both Excel and JSON files for each project
+                output_paths = save_data_to_excel_and_json(fake_projects)  # Generate separate files for each project
 
                 if output_paths:
                     st.success(f"Generated {num_generate_files} fake project file(s)!")
@@ -146,4 +156,3 @@ with st.spinner("Generating files..."):
                     # Optionally preview the first dataset
                     st.write("Generated Data preview:")
                     st.dataframe(pd.DataFrame(fake_projects[0]))  # Preview the first project
-                    
