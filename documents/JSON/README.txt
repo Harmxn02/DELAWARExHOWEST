@@ -1,0 +1,1 @@
+This is a sample JSON-file you can use to find available employees in our Team Planning Platform
