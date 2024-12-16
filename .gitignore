@@ -18,6 +18,8 @@ app/.streamlit/secrets.toml
 app/export/fake data/
 .env
 
+# Ignore Jensen's .devcontainer
+.devcontainer/devcontainer.json
 
 # Ignore Harman's personal files
 Harman/
