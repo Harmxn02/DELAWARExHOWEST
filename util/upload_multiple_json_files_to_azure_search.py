@@ -1,12 +1,25 @@
 import json
 from azure.search.documents import SearchClient
 from azure.core.credentials import AzureKeyCredential
-import os
-import re
+from azure.storage.blob import BlobServiceClient
 from dotenv import load_dotenv
+import re
+import os
 
-load_dotenv()
+load_dotenv()  # Ensure this is called before accessing environment variables
 
+connection_string = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
+if not connection_string:
+    raise ValueError("AZURE_STORAGE_CONNECTION_STRING is not set. Check your environment variables.")
+else:
+    print(f"Connection string loaded: {connection_string[:20]}...")  # Prints first 20 characters for verification
+
+# Load environment variables from the secrets.toml
+AZURE_STORAGE_CONNECTION_STRING = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
+AZURE_KNOWLEDGE_BASE_CONTAINER_NAME = os.getenv("AZURE_KNOWLEDGE_BASE_CONTAINER_NAME")
+AZURE_SEARCH_ENDPOINT = os.getenv("AZURE_SEARCH_ENDPOINT")
+AZURE_SEARCH_API_KEY = os.getenv("AZURE_SEARCH_API_KEY")
+AZURE_SEARCH_INDEX_NAME = os.getenv("AZURE_SEARCH_INDEX_NAME")
 
 def sanitize_key(key):
     """
@@ -18,72 +31,63 @@ def sanitize_key(key):
     Returns:
         str: A sanitized version of the key.
     """
-    # Replace all invalid characters with underscores
     sanitized = re.sub(r'[^a-zA-Z0-9_\-]', '_', key)
     return sanitized
 
-
-
-def upload_tasks_from_folder(folder_path, endpoint, api_key, index_name):
+def upload_tasks_from_blob_storage():
     """
-    Upload tasks from all JSON files in a folder to Azure Cognitive Search.
-
-    Args:
-        folder_path (str): The path to the folder containing the JSON files.
-        endpoint (str): The endpoint URL for the Azure Cognitive Search service.
-        api_key (str): The API key for accessing the Azure Cognitive Search service.
-        index_name (str): The name of the index to upload the data to.
+    Upload tasks from JSON files in an Azure Blob Storage container to Azure Cognitive Search.
 
     Returns:
         None
     """
-    # Create a SearchClient
-    client = SearchClient(endpoint=endpoint, index_name=index_name, credential=AzureKeyCredential(api_key))
+    # Create BlobServiceClient to connect to Azure Blob Storage
+    blob_service_client = BlobServiceClient.from_connection_string(AZURE_STORAGE_CONNECTION_STRING)
+    container_client = blob_service_client.get_container_client(AZURE_KNOWLEDGE_BASE_CONTAINER_NAME)
 
-    # Loop through all JSON files in the specified folder
-    for file_name in os.listdir(folder_path):
-        if file_name.endswith(".json"):  # Ensure we're only processing JSON files
-            file_path = os.path.join(folder_path, file_name)
-            print(f"Processing file: {file_path}")
-            
-            # Open the JSON file and load its data
-            with open(file_path, 'r') as f:
-                project_data = json.load(f)
-                
-                # Parse and format tasks for uploading
-                documents = []
-                for task in project_data:
-                    sanitized_task = sanitize_key(task["Task"])
-                    document = {
-                        "Task": sanitized_task, # Removing all symbols
-                        "MSCW": task["MSCW"],
-                        "Area": task["Area"],
-                        "Module": task["Module"],
-                        "Feature": task["Feature"],
-                        "Profile": task["Profile"],
-                        "MinDays": task["MinDays"],
-                        "RealDays": task["RealDays"],
-                        "MaxDays": task["MaxDays"],
-                        "Contingency": task["Contingency"],
-                        "EstimatedDays": task["EstimatedDays"],
-                        "EstimatedPrice": task["EstimatedPrice"],
-                        "PotentialIssues": ", ".join(task["potential_issues"]),  # Converting list to string
-                    }
-                    documents.append(document)
+    # Create a SearchClient for Azure Cognitive Search
+    client = SearchClient(
+        endpoint=AZURE_SEARCH_ENDPOINT,
+        index_name=AZURE_SEARCH_INDEX_NAME,
+        credential=AzureKeyCredential(AZURE_SEARCH_API_KEY)
+    )
 
-                # Upload the documents to the search index
-                result = client.upload_documents(documents)
-                print(f"Successfully uploaded documents from {file_name}: {result}")
-    
-    print("All files have been uploaded.")
+    # List and process all JSON blobs in the container
+    for blob in container_client.list_blobs():
+        if blob.name.endswith(".json"):  # Process only JSON files
+            print(f"Processing blob: {blob.name}")
 
-# Example Usage:
-folder_path = "./app/export/fake_data_json/"  # Path to the folder containing your JSON files
+            # Download the blob content
+            blob_client = container_client.get_blob_client(blob)
+            blob_data = blob_client.download_blob().readall()
+            project_data = json.loads(blob_data)
 
-# Azure configuration
-endpoint = str(os.getenv("AZURE_SEARCH_ENDPOINT"))
-api_key = str(os.getenv("AZURE_SEARCH_API_KEY"))
-index_name = str(os.getenv("AZURE_SEARCH_INDEX_NAME"))
+            # Parse and format tasks for uploading
+            documents = []
+            for task in project_data:
+                sanitized_task = sanitize_key(task["Task"])
+                document = {
+                    "Task": sanitized_task,
+                    "MSCW": task["MSCW"],
+                    "Area": task["Area"],
+                    "Module": task["Module"],
+                    "Feature": task["Feature"],
+                    "Profile": task["Profile"],
+                    "MinDays": task["MinDays"],
+                    "RealDays": task["RealDays"],
+                    "MaxDays": task["MaxDays"],
+                    "Contingency": task["Contingency"],
+                    "EstimatedDays": task["EstimatedDays"],
+                    "EstimatedPrice": task["EstimatedPrice"],
+                    "PotentialIssues": ", ".join(task.get("potential_issues", [])),  # Converting list to string
+                }
+                documents.append(document)
 
-# Upload tasks from all JSON files in the folder to Azure Cognitive Search
-upload_tasks_from_folder(folder_path, endpoint, api_key, index_name)
+            # Upload the documents to the search index
+            result = client.upload_documents(documents)
+            print(f"Successfully uploaded documents from {blob.name}: {result}")
+
+    print("All blobs have been uploaded.")
+
+# Execute the upload
+upload_tasks_from_blob_storage()
