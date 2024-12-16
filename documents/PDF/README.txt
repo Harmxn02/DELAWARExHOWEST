@@ -1,0 +1,1 @@
+This is a sample PDF-file you can use to generate estimations in our Project Estimation Tool
