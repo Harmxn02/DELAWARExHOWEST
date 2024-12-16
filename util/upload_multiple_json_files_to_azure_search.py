@@ -34,6 +34,30 @@ def sanitize_key(key):
     sanitized = re.sub(r'[^a-zA-Z0-9_\-]', '_', key)
     return sanitized
 
+
+def get_next_id(client):
+    """
+    Retrieve the current highest ID from the Azure Cognitive Search index and calculate the next ID.
+
+    Args:
+        client (SearchClient): The Azure Search client.
+
+    Returns:
+        int: The next ID to use.
+    """
+    highest_id = 0
+    try:
+        # Query the index to find the highest current ID
+        results = client.search(search_text="*", select="id", orderby="id desc", top=1)
+        for result in results:
+            highest_id = int(result["id"])
+            break
+    except Exception as e:
+        print(f"Error retrieving the highest ID: {e}")
+
+    return highest_id + 1
+
+
 def upload_tasks_from_blob_storage():
     """
     Upload tasks from JSON files in an Azure Blob Storage container to Azure Cognitive Search.
@@ -51,6 +75,9 @@ def upload_tasks_from_blob_storage():
         index_name=AZURE_SEARCH_INDEX_NAME,
         credential=AzureKeyCredential(AZURE_SEARCH_API_KEY)
     )
+    
+    # Get the starting ID
+    next_id = get_next_id(client)
 
     # List and process all JSON blobs in the container
     for blob in container_client.list_blobs():
@@ -67,6 +94,7 @@ def upload_tasks_from_blob_storage():
             for task in project_data:
                 sanitized_task = sanitize_key(task["Task"])
                 document = {
+                    "id": str(next_id),  # Use auto-incremented ID
                     "Task": sanitized_task,
                     "MSCW": task["MSCW"],
                     "Area": task["Area"],
@@ -82,6 +110,7 @@ def upload_tasks_from_blob_storage():
                     "PotentialIssues": ", ".join(task.get("potential_issues", [])),  # Converting list to string
                 }
                 documents.append(document)
+                next_id += 1    # Increment the ID for the next document
 
             # Upload the documents to the search index
             result = client.upload_documents(documents)
