@@ -77,6 +77,11 @@ DOC_INTEL_API_KEY = "placeholder"
 OPENAI_ENDPOINT = "placeholder"
 OPENAI_API_KEY = "placeholder"
 
+# Azure AI Search
+AZURE_SEARCH_ENDPOINT = "placeholder"
+AZURE_SEARCH_API_KEY = "placeholder"
+AZURE_SEARCH_INDEX_NAME = "placeholder"
+
 # Azure Blob Storage Variables
 AZURE_STORAGE_ACCOUNT_NAME = "placeholder"
 AZURE_CONTAINER_NAME = "placeholder"
