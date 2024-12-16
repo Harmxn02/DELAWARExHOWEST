@@ -1,0 +1,190 @@
+{
+  "name": "tasks-index",
+  "fields": [
+    {
+      "name": "id",
+      "type": "Edm.String",
+      "key": true,
+      "retrievable": true,
+      "stored": true,
+      "searchable": false,
+      "filterable": true,
+      "sortable": true,
+      "facetable": false,
+      "synonymMaps": []
+    },
+    {
+      "name": "Task",
+      "type": "Edm.String",
+      "key": false,
+      "retrievable": true,
+      "stored": true,
+      "searchable": true,
+      "filterable": true,
+      "sortable": true,
+      "facetable": true,
+      "synonymMaps": []
+    },
+    {
+      "name": "MSCW",
+      "type": "Edm.String",
+      "key": false,
+      "retrievable": true,
+      "stored": true,
+      "searchable": true,
+      "filterable": true,
+      "sortable": true,
+      "facetable": true,
+      "synonymMaps": []
+    },
+    {
+      "name": "Area",
+      "type": "Edm.String",
+      "key": false,
+      "retrievable": true,
+      "stored": true,
+      "searchable": true,
+      "filterable": true,
+      "sortable": true,
+      "facetable": true,
+      "synonymMaps": []
+    },
+    {
+      "name": "Module",
+      "type": "Edm.String",
+      "key": false,
+      "retrievable": true,
+      "stored": true,
+      "searchable": true,
+      "filterable": true,
+      "sortable": true,
+      "facetable": true,
+      "synonymMaps": []
+    },
+    {
+      "name": "Feature",
+      "type": "Edm.String",
+      "key": false,
+      "retrievable": true,
+      "stored": true,
+      "searchable": true,
+      "filterable": true,
+      "sortable": true,
+      "facetable": true,
+      "synonymMaps": []
+    },
+    {
+      "name": "MinDays",
+      "type": "Edm.Int32",
+      "key": false,
+      "retrievable": true,
+      "stored": true,
+      "searchable": false,
+      "filterable": true,
+      "sortable": true,
+      "facetable": true,
+      "synonymMaps": []
+    },
+    {
+      "name": "RealDays",
+      "type": "Edm.Int32",
+      "key": false,
+      "retrievable": true,
+      "stored": true,
+      "searchable": false,
+      "filterable": true,
+      "sortable": true,
+      "facetable": true,
+      "synonymMaps": []
+    },
+    {
+      "name": "MaxDays",
+      "type": "Edm.Int32",
+      "key": false,
+      "retrievable": true,
+      "stored": true,
+      "searchable": false,
+      "filterable": true,
+      "sortable": true,
+      "facetable": true,
+      "synonymMaps": []
+    },
+    {
+      "name": "Contingency",
+      "type": "Edm.String",
+      "key": false,
+      "retrievable": true,
+      "stored": true,
+      "searchable": true,
+      "filterable": true,
+      "sortable": true,
+      "facetable": true,
+      "synonymMaps": []
+    },
+    {
+      "name": "EstimatedDays",
+      "type": "Edm.Int32",
+      "key": false,
+      "retrievable": true,
+      "stored": true,
+      "searchable": false,
+      "filterable": true,
+      "sortable": true,
+      "facetable": true,
+      "synonymMaps": []
+    },
+    {
+      "name": "EstimatedPrice",
+      "type": "Edm.Double",
+      "key": false,
+      "retrievable": true,
+      "stored": true,
+      "searchable": false,
+      "filterable": true,
+      "sortable": true,
+      "facetable": true,
+      "synonymMaps": []
+    },
+    {
+      "name": "PotentialIssues",
+      "type": "Edm.String",
+      "key": false,
+      "retrievable": true,
+      "stored": true,
+      "searchable": true,
+      "filterable": true,
+      "sortable": true,
+      "facetable": true,
+      "synonymMaps": []
+    },
+    {
+      "name": "Profile",
+      "type": "Edm.String",
+      "key": false,
+      "retrievable": true,
+      "stored": true,
+      "searchable": true,
+      "filterable": true,
+      "sortable": true,
+      "facetable": true,
+      "synonymMaps": []
+    }
+  ],
+  "scoringProfiles": [],
+  "corsOptions": {
+    "allowedOrigins": [
+      "*"
+    ],
+    "maxAgeInSeconds": 300
+  },
+  "suggesters": [],
+  "analyzers": [],
+  "tokenizers": [],
+  "tokenFilters": [],
+  "charFilters": [],
+  "normalizers": [],
+  "similarity": {
+    "@odata.type": "#Microsoft.Azure.Search.BM25Similarity"
+  },
+  "@odata.etag": "\"0x8DD1DCBA2E07FC4\""
+}
