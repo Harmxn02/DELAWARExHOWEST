@@ -1,3 +1,5 @@
+# Install these packages by running `pip install -r requirements.txt`
+
 streamlit
 azure-storage-blob
 pandas
