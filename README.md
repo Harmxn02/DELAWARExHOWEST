@@ -84,6 +84,7 @@ AZURE_SEARCH_INDEX_NAME = "placeholder"
 # Azure Blob Storage Variables
 AZURE_STORAGE_ACCOUNT_NAME = "placeholder"
 AZURE_CONTAINER_NAME = "placeholder"
+AZURE_KNOWLEDGE_BASE_CONTAINER_NAME = "placeholder"
 AZURE_STORAGE_CONNECTION_STRING = "placeholder"
 
 # Azure Database for MySQL Variables 
