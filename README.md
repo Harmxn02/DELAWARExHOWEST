@@ -58,7 +58,6 @@ cd DELAWARExHOWEST
 #### Step 2. Install necessary libraries
 
 ```bash
-cd .\app\
 pip install -r requirements.txt
 ```
 
