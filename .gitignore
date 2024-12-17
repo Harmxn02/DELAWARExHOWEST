@@ -26,3 +26,6 @@ Harman/
 
 # Ignore exported files (JSON, .xlsx)
 app/export/
+
+# Ignore file that doesn't need to be tracked
+app/generate_fake_data.py
