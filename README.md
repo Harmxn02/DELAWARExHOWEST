@@ -50,15 +50,14 @@ The **AI-driven Project Estimations and Team Planning Platform** is designed to 
 #### Step 1. Clone the repository
 
 ```bash
-git clone https://github.com/Harmxn02/DELAWARExHOWEST_AI-driven-project-estimations.git
-cd DELAWARExHOWEST_AI-driven-project-estimations
+git clone https://github.com/Harmxn02/DELAWARExHOWEST.git
+cd DELAWARExHOWEST
 
 ```
 
 #### Step 2. Install necessary libraries
 
 ```bash
-cd .\app\
 pip install -r requirements.txt
 ```
 
@@ -85,7 +84,15 @@ AZURE_SEARCH_INDEX_NAME = "placeholder"
 # Azure Blob Storage Variables
 AZURE_STORAGE_ACCOUNT_NAME = "placeholder"
 AZURE_CONTAINER_NAME = "placeholder"
+AZURE_KNOWLEDGE_BASE_CONTAINER_NAME = "placeholder"
 AZURE_STORAGE_CONNECTION_STRING = "placeholder"
+
+# Azure Database for MySQL Variables 
+AZ_db_host = "placeholder"
+AZ_db_user = "placeholder"
+AZ_db_password = "placeholder"
+AZ_db_name = "placeholder"
+AZ_db_port = "placeholder"
 ```
 
 #### Step 4. Run the streamlit application
@@ -96,6 +103,12 @@ Make sure you are inside the `.\app\` directory and run the following command:
 
 ```bash
 streamlit run streamlit_main.py
+```
+
+or if you want to run the Team Planning application, you can run this command instead:
+
+```bash
+streamlit run team_planning_platform.py
 ```
 
 If you are not inside the `.\app\` directory, the streamlit application will not find the secrets.toml file because that is stored inside the `.\app\`-directory.
