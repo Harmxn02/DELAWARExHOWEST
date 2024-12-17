@@ -50,8 +50,8 @@ The **AI-driven Project Estimations and Team Planning Platform** is designed to 
 #### Step 1. Clone the repository
 
 ```bash
-git clone https://github.com/Harmxn02/DELAWARExHOWEST_AI-driven-project-estimations.git
-cd DELAWARExHOWEST_AI-driven-project-estimations
+git clone https://github.com/Harmxn02/DELAWARExHOWEST.git
+cd DELAWARExHOWEST
 
 ```
 
