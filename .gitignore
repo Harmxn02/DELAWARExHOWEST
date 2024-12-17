@@ -23,3 +23,6 @@ app/export/fake data/
 
 # Ignore Harman's personal files
 Harman/
+
+# Ignore exported files (JSON, .xlsx)
+app/export/
