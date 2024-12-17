@@ -104,4 +104,10 @@ Make sure you are inside the `.\app\` directory and run the following command:
 streamlit run streamlit_main.py
 ```
 
+or if you want to run the Team Planning application, you can run this command instead:
+
+```bash
+streamlit run team_planning_platform.py
+```
+
 If you are not inside the `.\app\` directory, the streamlit application will not find the secrets.toml file because that is stored inside the `.\app\`-directory.
