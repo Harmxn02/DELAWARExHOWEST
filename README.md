@@ -85,6 +85,13 @@ AZURE_SEARCH_INDEX_NAME = "placeholder"
 AZURE_STORAGE_ACCOUNT_NAME = "placeholder"
 AZURE_CONTAINER_NAME = "placeholder"
 AZURE_STORAGE_CONNECTION_STRING = "placeholder"
+
+# Azure Database for MySQL Variables 
+AZ_db_host = "placeholder"
+AZ_db_user = "placeholder"
+AZ_db_password = "placeholder"
+AZ_db_name = "placeholder"
+AZ_db_port = "placeholder"
 ```
 
 #### Step 4. Run the streamlit application
