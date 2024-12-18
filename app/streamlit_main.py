@@ -192,6 +192,55 @@ def query_azure_ai_search(generated_query):
         st.error(f"Error while querying Azure AI Search: {str(e)}")
         return None
 
+# Function to construct the estimation prompt
+def construct_estimation_prompt(search_results, user_prompt):
+    tasks = "\n\n".join([
+    f"MSCW: {result['MSCW']}\nArea: {result['Area']}\nModule: {result['Module']}\nFeature: {result['Feature']}\nTask: {result['Task']}\nProfile: {result['Profile']}\nMinDays: {result.get('MinDays', 'N/A')}\nRealDays: {result.get('RealDays', 'N/A')}\nMaxDays: {result.get('MaxDays', 'N/A')}\n% Contingency: {result.get('Contingency', 'N/A')}\nEstimatedDays: {result.get('EstimatedDays', 'N/A')}\nEstimatedPrice: {result.get('EstimatedPrice', 'N/A')}\nPotential Issues: {', '.join(result.get('PotentialIssues', []))}" 
+    for result in search_results
+])
+
+    return f"""
+    Context:
+    The user has described their project as follows:
+    {user_prompt}
+
+    The following tasks were retrieved based on the user's project description:
+
+    {tasks}
+
+    Instructions:
+    - Create a detailed project estimation using these tasks.
+    - For each task:
+        - Provide a clear timeline (in days) for its completion.
+        - Identify any risks, delays, or dependencies that could impact the task.
+        - Include the task's estimated price and any required resources or roles.
+    - Calculate the overall project duration, including potential buffer times for dependencies or risks.
+    - Present the estimation in a structured format, such as a table or JSON.
+
+    Return your response in the following JSON format:
+    {{
+        "total_duration": "Total project duration in days",
+        "tasks": [
+            {{
+                "MSCW": "Must Have / Should Have / Could Have",
+                "Area": "Area of work",
+                "Module": "Module category",
+                "Feature": "Feature of the task",
+                "Task": "Task description",
+                "Profile": "Profile needed for the task",
+                "MinDays": "Minimum estimated days for the task",
+                "RealDays": "Actual days taken to complete the task",
+                "MaxDays": "Maximum estimated days for the task",
+                "% Contingency": "Contingency percentage for the task",
+                "EstimatedDays": "Estimated duration for the task",
+                "EstimatedPrice": "Estimated price for the task",
+                "Potential Issues": "Any potential risks or issues impacting the task"
+            }},
+            ...
+        ]
+    }}
+    """
+
 def ask_openai(question, context):
     """
     Sends a question to the OpenAI API with a given context and retrieves the response.
