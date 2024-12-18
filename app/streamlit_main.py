@@ -166,6 +166,32 @@ def generate_search_query(user_prompt):
         st.error(f"An error occurred during query generation: {str(e)}")
         return None
 
+# Function to query Azure AI Search
+def query_azure_ai_search(generated_query):
+    headers = {
+        "Content-Type": "application/json",
+        "api-key": st.secrets["AZURE_SEARCH_API_KEY"],
+    }
+    
+    search_url = f"{st.secrets['AZURE_SEARCH_ENDPOINT']}/indexes/{st.secrets['AZURE_SEARCH_INDEX_NAME']}/docs/search?api-version=2021-04-30-Preview"
+
+    search_data = {
+        "search": generated_query,
+        "top": 5,  # Fetch top 5 results most relevant to the query
+    }
+
+    try:
+        response = requests.post(search_url, headers=headers, json=search_data)
+        if response.status_code == 200:
+            search_results = response.json()
+            return search_results['value']
+        else:
+            st.error(f"Error querying AI Search: {response.status_code} - {response.text}")
+            return None
+    except Exception as e:
+        st.error(f"Error while querying Azure AI Search: {str(e)}")
+        return None
+
 def ask_openai(question, context):
     """
     Sends a question to the OpenAI API with a given context and retrieves the response.
