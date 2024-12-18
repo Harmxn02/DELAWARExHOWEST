@@ -7,6 +7,9 @@ Usage steps:
 1. Upload the files you want to use for your knowledge base to the Azure Blob Storage container, in our case 'knowledge-base'
 2. Run this script
 
+! Make sure to run this script in your terminal from the `/scripts/` directory, or it won't find the JSON-configuration file. 
+! You can also just move the JSON configuration file here, and update the path in the script.
+
 If everything went well, you should see the index created and the documents uploaded to the Azure Search service..
 Whenever you update the knowledge base, simply run this script again, it will re-create the index and use/upload the new data.
 """
