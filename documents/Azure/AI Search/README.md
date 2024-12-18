@@ -31,6 +31,7 @@ Wait for the deployment to complete.
 ## After creating the resource
 
 > There is a video explaining the entire process. If this guide is not clear enough, you can follow that instead.
+> There is also a very detailed PDF document available that explains the process clearly
 
 After creating the resource you need to create an index which will contain the knowledge base's data. To do this follow these steps:
 
