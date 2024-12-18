@@ -241,63 +241,26 @@ def construct_estimation_prompt(search_results, user_prompt):
     }}
     """
 
-def ask_openai(question, context):
-    """
-    Sends a question to the OpenAI API with a given context and retrieves the response.
-    Args:
-        question (str): The question to ask the OpenAI API.
-        context (str): The context to provide to the OpenAI API for better understanding of the question.
-    Returns:
-        str: The response from the OpenAI API if the request is successful.
-        None: If there is an error in the request or an exception occurs.
-    Raises:
-        Exception: If an error occurs during the API request.
-    """
-    
-    
-    ### TODO: Implement AI Search to get files from our knowledge base
-    ### For now, simply print out the names of the files in the container
-    
-    # Initialize the BlobServiceClient with the connection string
-    blob_service_client = BlobServiceClient.from_connection_string(
-        st.secrets["AZURE_STORAGE_CONNECTION_STRING"]
-    )
-    
-    # Get a client for the container
-    container_client = blob_service_client.get_container_client(
-        st.secrets["AZURE_KNOWLEDGE_BASE_CONTAINER_NAME"]
-    )
-    
-    # List all blobs in the knowledge base container
-    knowledge_base_blob_list = container_client.list_blobs()
-    
-    st.write("### Files in the knowledge base:")
-    for blob in knowledge_base_blob_list:
-        # write blobs as list items
-        st.write(f"- {blob.name}")
-
+# Function to query OpenAI for project estimation
+def ask_openai_for_estimation(prompt):
     headers = {
         "Content-Type": "application/json",
         "api-key": st.secrets["OPENAI_API_KEY"],
     }
 
-    messages = [
-        {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {question}"}
-    ]
-    data = {"messages": messages, "max_tokens": 2000, "temperature": 0.7}
+    data = {"messages": [{"role": "user", "content": prompt}], "max_tokens": 1500, "temperature": 0.7}
 
     try:
         response = requests.post(
             st.secrets["OPENAI_ENDPOINT"], headers=headers, json=data
         )
-
         if response.status_code == 200:
             return response.json()["choices"][0]["message"]["content"].strip()
         else:
-            st.error(f"Error in OpenAI request: {response.json()}")
+            st.error(f"Error in OpenAI estimation request: {response.json()}")
             return None
     except Exception as e:
-        st.error(f"An error occurred during OpenAI query: {str(e)}")
+        st.error(f"An error occurred during OpenAI estimation request: {str(e)}")
         return None
 
 
