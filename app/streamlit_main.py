@@ -7,6 +7,7 @@ from azure.storage.blob import BlobServiceClient, ContentSettings
 import io
 import json
 
+#region PDF Analysis and Upload
 def upload_pdf_to_azure(uploaded_file):
     """
     Uploads a PDF file to an Azure Blob Storage container.
@@ -124,7 +125,9 @@ def analyze_pdf(pdf_path_or_url, is_url=False):
     except Exception as e:
         st.error(f"An error occurred during PDF analysis: {str(e)}")
         return None
+#endregion
 
+#region AI Search and Task Estimation
 # Generate a search query using OpenAI
 def generate_search_query(user_prompt):
     openai_prompt = f"""
@@ -292,6 +295,7 @@ def parse_and_display_estimation(response_json):
             st.error("No tasks found in the estimation.")
     except Exception as e:
         st.error(f"Error while parsing estimation response: {str(e)}")
+#endregion 
 
 #region Streamlit dashboard
 #TODO: Check if this is still necessary after implementing AI Search
