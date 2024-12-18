@@ -439,6 +439,7 @@ if uploaded_file:
                             )
                     except Exception as e:
                         st.error(f"Error while processing OpenAI response: {str(e)}")
+
 # Tab 1: AI Search & Task Estimator
 with tabs[1]:
     st.header("AI Search & Task Estimator")
