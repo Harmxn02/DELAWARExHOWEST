@@ -1,7 +1,17 @@
 """
-This script uploads multiple Excel files
-from an Azure Blob Storage container
-to an Azure Cognitive Search index.
+This script does the following tasks:
+1. It creates an AI Search index (or re-creates it if it already exists) based on a JSON configuration file.
+2. It uploads multiple Excel files from an Azure Blob Storage container to an Azure Search index in the correct format.
+
+Usage steps:
+1. Upload the files you want to use for your knowledge base to the Azure Blob Storage container, in our case 'knowledge-base'
+2. Run this script
+
+! Make sure to run this script in your terminal from the `/scripts/` directory, or it won't find the JSON-configuration file. 
+! You can also just move the JSON configuration file here, and update the path in the script.
+
+If everything went well, you should see the index created and the documents uploaded to the Azure Search service..
+Whenever you update the knowledge base, simply run this script again, it will re-create the index and use/upload the new data.
 """
 
 
@@ -9,10 +19,11 @@ import io
 import json
 import pandas as pd
 from azure.search.documents import SearchClient
+from azure.search.documents.indexes import SearchIndexClient
+from azure.search.documents.indexes.models import SearchIndex
 from azure.core.credentials import AzureKeyCredential
 from azure.storage.blob import BlobServiceClient
 from dotenv import load_dotenv
-import re
 import os
 
 load_dotenv()  # Ensure this is called before accessing environment variables
@@ -26,6 +37,46 @@ AZURE_SEARCH_INDEX_NAME = os.getenv("AZURE_SEARCH_INDEX_NAME")
 
 if not AZURE_STORAGE_CONNECTION_STRING:
     raise ValueError("AZURE_STORAGE_CONNECTION_STRING is not set. Check your environment variables.")
+
+
+def load_index_configuration(file_path):
+    """
+    Load the search index configuration from a JSON file.
+
+    Args:
+        file_path (str): Path to the configuration JSON file.
+
+    Returns:
+        dict: The index configuration.
+    """
+    with open(file_path, 'r') as config_file:
+        return json.load(config_file)
+
+
+def ensure_index_exists(index_client, index_name, config_path):
+    """
+    Ensure the Azure Cognitive Search index exists by creating it if necessary.
+
+    Args:
+        index_client (SearchIndexClient): The Azure Search Index client.
+        index_name (str): The name of the search index.
+        config_path (str): Path to the index configuration file.
+
+    Returns:
+        None
+    """
+    try:
+        if index_client.get_index(index_name):
+            print(f"Index '{index_name}' exists. Deleting and re-creating it.")
+            index_client.delete_index(index_name)
+    except Exception as e:
+        print(f"Index '{index_name}' does not exist or error occurred: {e}")
+
+    # Load and create the index from configuration
+    index_config = load_index_configuration(config_path)
+    index = SearchIndex(**index_config)
+    index_client.create_index(index)
+    print(f"Index '{index_name}' has been created.")
 
 
 def get_next_id(client):
@@ -106,12 +157,22 @@ def upload_tasks_from_blob_storage():
     blob_service_client = BlobServiceClient.from_connection_string(AZURE_STORAGE_CONNECTION_STRING)
     container_client = blob_service_client.get_container_client(AZURE_KNOWLEDGE_BASE_CONTAINER_NAME)
 
+    # Create a SearchIndexClient for Azure Cognitive Search
+    index_client = SearchIndexClient(
+        endpoint=AZURE_SEARCH_ENDPOINT,
+        credential=AzureKeyCredential(AZURE_SEARCH_API_KEY)
+    )
+
     # Create a SearchClient for Azure Cognitive Search
     client = SearchClient(
         endpoint=AZURE_SEARCH_ENDPOINT,
         index_name=AZURE_SEARCH_INDEX_NAME,
         credential=AzureKeyCredential(AZURE_SEARCH_API_KEY)
     )
+    
+    # Ensure the search index exists
+    config_path = r"../documents/Azure/AI Search/search_index_configuration.json"
+    ensure_index_exists(index_client, AZURE_SEARCH_INDEX_NAME, config_path)
     
     # Get the starting ID
     next_id = get_next_id(client)
