@@ -263,6 +263,36 @@ def ask_openai_for_estimation(prompt):
         st.error(f"An error occurred during OpenAI estimation request: {str(e)}")
         return None
 
+# Function to parse and display project estimation
+def parse_and_display_estimation(response_json):
+    try:
+        data = json.loads(response_json)
+        total_duration = data.get("total_duration", "N/A")
+        tasks = data.get("tasks", [])
+
+        st.write(f"### Total Project Duration: {total_duration} days")
+
+        if tasks:
+            df = pd.DataFrame(tasks)
+            st.dataframe(df)
+
+            # Download as Excel
+            excel_buffer = io.BytesIO()
+            with pd.ExcelWriter(excel_buffer, engine="openpyxl") as writer:
+                df.to_excel(writer, index=False, sheet_name="Project Estimation")
+            excel_buffer.seek(0)
+
+            st.download_button(
+                label="Download Estimation as Excel",
+                data=excel_buffer,
+                file_name="project_estimation.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            )
+        else:
+            st.error("No tasks found in the estimation.")
+    except Exception as e:
+        st.error(f"Error while parsing estimation response: {str(e)}")
+
 
 st.header("AI-Driven Project Estimation Tool")
 
