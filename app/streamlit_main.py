@@ -125,7 +125,7 @@ def analyze_pdf(pdf_path_or_url, is_url=False):
         st.error(f"An error occurred during PDF analysis: {str(e)}")
         return None
 
-# Function to generate a search query using OpenAI
+# Generate a search query using OpenAI
 def generate_search_query(user_prompt):
     openai_prompt = f"""
     Context:
@@ -166,7 +166,7 @@ def generate_search_query(user_prompt):
         st.error(f"An error occurred during query generation: {str(e)}")
         return None
 
-# Function to query Azure AI Search
+# Query Azure AI Search
 def query_azure_ai_search(generated_query):
     headers = {
         "Content-Type": "application/json",
@@ -192,7 +192,7 @@ def query_azure_ai_search(generated_query):
         st.error(f"Error while querying Azure AI Search: {str(e)}")
         return None
 
-# Function to construct the estimation prompt
+# Construct the estimation prompt
 def construct_estimation_prompt(search_results, user_prompt):
     tasks = "\n\n".join([
     f"MSCW: {result['MSCW']}\nArea: {result['Area']}\nModule: {result['Module']}\nFeature: {result['Feature']}\nTask: {result['Task']}\nProfile: {result['Profile']}\nMinDays: {result.get('MinDays', 'N/A')}\nRealDays: {result.get('RealDays', 'N/A')}\nMaxDays: {result.get('MaxDays', 'N/A')}\n% Contingency: {result.get('Contingency', 'N/A')}\nEstimatedDays: {result.get('EstimatedDays', 'N/A')}\nEstimatedPrice: {result.get('EstimatedPrice', 'N/A')}\nPotential Issues: {', '.join(result.get('PotentialIssues', []))}" 
@@ -241,7 +241,7 @@ def construct_estimation_prompt(search_results, user_prompt):
     }}
     """
 
-# Function to query OpenAI for project estimation
+# Query OpenAI for project estimation
 def ask_openai_for_estimation(prompt):
     headers = {
         "Content-Type": "application/json",
@@ -263,7 +263,7 @@ def ask_openai_for_estimation(prompt):
         st.error(f"An error occurred during OpenAI estimation request: {str(e)}")
         return None
 
-# Function to parse and display project estimation
+# Parse and display project estimation
 def parse_and_display_estimation(response_json):
     try:
         data = json.loads(response_json)
