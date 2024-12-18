@@ -125,6 +125,46 @@ def analyze_pdf(pdf_path_or_url, is_url=False):
         st.error(f"An error occurred during PDF analysis: {str(e)}")
         return None
 
+# Function to generate a search query using OpenAI
+def generate_search_query(user_prompt):
+    openai_prompt = f"""
+    Context:
+    You are helping to create a project timeline. The user has described their project in general terms.
+
+    User Prompt:
+    {user_prompt}
+
+    Instructions:
+    - Write a query to search for tasks relevant to the described project.
+    - The query should focus on finding tasks with clear roles, responsibilities, or descriptions relevant to the project.
+    - Aim for tasks that are high-priority or foundational to the type of project described.
+    - Keep the query concise but descriptive enough to retrieve meaningful results.
+
+    Query:
+    """
+
+    headers = {
+        "Content-Type": "application/json",
+        "api-key": st.secrets["OPENAI_API_KEY"],
+    }
+    data = {
+        "messages": [{"role": "user", "content": openai_prompt}],
+        "max_tokens": 150,
+        "temperature": 0.7,
+    }
+
+    try:
+        response = requests.post(
+            st.secrets["OPENAI_ENDPOINT"], headers=headers, json=data
+        )
+        if response.status_code == 200:
+            return response.json()["choices"][0]["message"]["content"].strip()
+        else:
+            st.error(f"Error in OpenAI query generation: {response.text}")
+            return None
+    except Exception as e:
+        st.error(f"An error occurred during query generation: {str(e)}")
+        return None
 
 def ask_openai(question, context):
     """
