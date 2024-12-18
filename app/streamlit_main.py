@@ -293,9 +293,8 @@ def parse_and_display_estimation(response_json):
     except Exception as e:
         st.error(f"Error while parsing estimation response: {str(e)}")
 
-
-st.header("AI-Driven Project Estimation Tool")
-
+#region Streamlit dashboard
+#TODO: Check if this is still necessary after implementing AI Search
 # Add session state to store results
 if "extracted_text" not in st.session_state:
     st.session_state.extracted_text = None
@@ -303,7 +302,17 @@ if "extracted_text" not in st.session_state:
 if "ai_response" not in st.session_state:
     st.session_state.ai_response = None
 
-uploaded_file = st.file_uploader("Upload a PDF file", type=["pdf"])
+st.header("AI-Driven Project Estimation Tool")
+
+# Tabbed Interface
+# Create tabbed interface
+tabs = st.tabs(["PDF Analyzer", "AI Search & Task Estimator"])
+
+# Tab 0: PDF file analyzer
+with tabs[0]:
+    st.header("PDF Analyzer")
+
+    uploaded_file = st.file_uploader("Upload a PDF file", type=["pdf"])
 
 if uploaded_file:
     with st.spinner("Uploading and analyzing PDF..."):
@@ -424,10 +433,31 @@ if uploaded_file:
                                 mime="text/json",
                             )
                             
-                            
                         else:
                             st.error(
                                 "Failed to extract tasks: Check the prompt or OpenAI response structure."
                             )
                     except Exception as e:
                         st.error(f"Error while processing OpenAI response: {str(e)}")
+# Tab 1: AI Search & Task Estimator
+with tabs[1]:
+    st.header("AI Search & Task Estimator")
+
+    user_prompt = st.text_area("Describe your project requirements:")
+if st.button("Generate Project Estimation"):
+    if user_prompt:
+        with st.spinner("Generating query..."):
+            search_query = generate_search_query(user_prompt)
+
+        if search_query:
+            with st.spinner("Querying Azure AI Search..."):
+                search_results = query_azure_ai_search(search_query)
+
+            if search_results:
+                with st.spinner("Generating project estimation..."):
+                    estimation_prompt = construct_estimation_prompt(search_results, user_prompt)
+                    ai_response = ask_openai_for_estimation(estimation_prompt)
+
+                if ai_response:
+                    parse_and_display_estimation(ai_response)
+#endregion
