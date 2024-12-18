@@ -30,16 +30,18 @@ Wait for the deployment to complete.
 
 ## After creating the resource
 
+> There is a video explaining the entire process. If this guide is not clear enough, you can follow that instead.
+
 After creating the resource you need to create an index which will contain the knowledge base's data. To do this follow these steps:
 
 1. Navigate to the Azure portal
-2. Search for the `Search service` resource you just made, and click on it
-3. Under "Search management", click on **"Indexes"** (not "Indexers")
-4. Press `+ Add index`, and choose the option with (JSON) at the end (see photo)
+2. Search for the `Storage accounts` resource, and click on it
+3. Create a new storage account called "knowledge-base"
+4. Upload the Excel files you would like to use to make estimations with (your historical data)
 
-![3_CreateIndex](./images/3_CreateIndex.png)
+Now you have a storage account filled with the data we will add to the Search index. All you need to do now, is to run the `build_knowledge_base.py` script, and that's it.
 
 <!-- markdownlint-disable MD029 -->
-5. Delete the contents in the code-field so that the code-field is empty. Then paste the contents of the `search_index_configuration.json` file there instead. You can find this file in this directory (it's the file ending on `.json`)
-
-Pressing the blue `Save` button should create the index and you should see it in the list.
+5. Go to the code repository, and navigate to the path `...../scripts/`
+6. Type this in the terminal and press enter: `python build_knowledge_base.py`
+7. Verify if there was in fact a Search Index built, and that it has several documents inside it (click on the search-box and press `Enter`)
