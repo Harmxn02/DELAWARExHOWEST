@@ -40,6 +40,6 @@ After creating the resource you need to create an index which will contain the k
 ![3_CreateIndex](./images/3_CreateIndex.png)
 
 <!-- markdownlint-disable MD029 -->
-5. Delete the contents in the code-field so that the code-field is empty. Then paste the contents of the `index-json-configuration-file.json` file there instead. You can find this file in this directory (it's the file ending on `.json`)
+5. Delete the contents in the code-field so that the code-field is empty. Then paste the contents of the `search_index_configuration.json` file there instead. You can find this file in this directory (it's the file ending on `.json`)
 
 Pressing the blue `Save` button should create the index and you should see it in the list.
