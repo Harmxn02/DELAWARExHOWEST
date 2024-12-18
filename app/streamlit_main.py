@@ -5,7 +5,6 @@ import pandas as pd
 import streamlit as st
 from azure.storage.blob import BlobServiceClient, ContentSettings
 import io
-
 import json
 
 def upload_pdf_to_azure(uploaded_file):
@@ -53,14 +52,13 @@ def upload_pdf_to_azure(uploaded_file):
 
         # Construct the URL to the uploaded blob
         blob_url = f"https://{st.secrets['AZURE_STORAGE_ACCOUNT_NAME']}.blob.core.windows.net/{st.secrets['AZURE_CONTAINER_NAME']}/{blob_name}"
-
-        st.success(f"Upload successful. File URL: {blob_url}")        
+        
+        st.success(f"Upload successful. File URL: {blob_url}")
         return blob_url
 
     except Exception as e:
         st.error(f"An error occurred during upload: {str(e)}")
         return None
-
 
 def analyze_pdf(pdf_path_or_url, is_url=False):
     """
@@ -162,13 +160,6 @@ def ask_openai(question, context):
     for blob in knowledge_base_blob_list:
         # write blobs as list items
         st.write(f"- {blob.name}")
-    
-    
-    
-    
-    
-    
-    
 
     headers = {
         "Content-Type": "application/json",
