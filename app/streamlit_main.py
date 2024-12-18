@@ -305,7 +305,6 @@ if "ai_response" not in st.session_state:
 st.header("AI-Driven Project Estimation Tool")
 
 # Tabbed Interface
-# Create tabbed interface
 tabs = st.tabs(["PDF Analyzer", "AI Search & Task Estimator"])
 
 # Tab 0: PDF file analyzer
