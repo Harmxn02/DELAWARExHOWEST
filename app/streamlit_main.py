@@ -277,20 +277,22 @@ def parse_and_display_estimation(response_json):
             st.error("Received empty response for estimation.")
             return
         
-        
         data = json.loads(response_json)
         total_price = data.get("total_price", "N/A")
         tasks = data.get("tasks", [])
-        
+          
         if not tasks:
             st.error("No tasks found in the estimation.")
             return
+
 
         st.write(f"### Estimated cost of the project: € {total_price}")
 
         if tasks:
             df = pd.DataFrame(tasks)
             st.dataframe(df)
+
+            st.write(f"## Estimated cost of the project: € {total_price}")
 
             excel_buffer = io.BytesIO()
             with pd.ExcelWriter(excel_buffer, engine="openpyxl") as writer:
