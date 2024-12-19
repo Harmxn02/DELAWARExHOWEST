@@ -201,6 +201,14 @@ def construct_estimation_prompt(search_results, user_prompt):
     f"MSCW: {result['MSCW']}\nArea: {result['Area']}\nModule: {result['Module']}\nFeature: {result['Feature']}\nTask: {result['Task']}\nProfile: {result['Profile']}\nMinDays: {result.get('MinDays', 'N/A')}\nRealDays: {result.get('RealDays', 'N/A')}\nMaxDays: {result.get('MaxDays', 'N/A')}\n% Contingency: {result.get('Contingency', 'N/A')}\nEstimatedDays: {result.get('EstimatedDays', 'N/A')}\nEstimatedPrice: {result.get('EstimatedPrice', 'N/A')}\nPotential Issues: {', '.join(result.get('PotentialIssues', []))}" 
     for result in search_results
 ])
+    
+    tasks_json = [json.dumps(result, indent=4) for result in search_results]
+
+    # Join the JSON strings with commas and wrap them in square brackets to form a JSON array
+    tasks_json_output = '[\n' + ',\n'.join(tasks_json) + '\n]'
+
+    # Print the JSON array
+    st.json(tasks_json_output)
 
     return f"""
     Context:
@@ -208,24 +216,45 @@ def construct_estimation_prompt(search_results, user_prompt):
     {user_prompt}
 
     The following tasks were retrieved based on the user's project description:
-
     {tasks}
 
     Instructions:
-    - Create a detailed project estimation using these tasks.
-    - For each task:
-        - Provide a clear timeline (in days) for its completion.
-        - Identify any risks, delays, or dependencies that could impact the task.
-        - Include the task's estimated price and any required resources or roles.
-    - Calculate the overall project duration, including potential buffer times for dependencies or risks.
-    - Present the estimation in a structured format, such as a table or JSON.
+        - Create a detailed project estimation from the user prompt using these tasks.
+        Do not blindly copy the tasks but use them as a guideline to create the new estimated task.
+        - For each task:
+            - Provide a clear timeline (in days) for its completion.
+            - Identify any risks, delays, or dependencies that could impact the task.
+            - Include the task's estimated price and any required resources or roles.
+        - Calculate the overall project duration, including potential buffer times for dependencies or risks.
+        - Present the estimation in a structured format, such as a table or JSON.
+
+    General pointers:
+        - Keep the estimated days low. Anywhere from 0 for MinDays to 4 days for MaxDays is a good estimate.
+        - Make sure not to use the same Area for every task. Try to distribute the tasks across different Areas.
+        - Make sure to use a wide variety of Profiles for the tasks. Don't use the same Profile for every task.
+        - Make sure to have different MSCW priorities for the tasks. Make sure to have at least two tasks for each priority.
+        - Make sure to vary in your usage of Profile. Do not use the same Profile for every task.
+
+        1. **MSCW**: The priority of the task. The options are: "1 Must Have", "2 Should Have", "3 Could Have"
+        2. **Area**: The area of the project where the task belongs. The options are: "01 Analyze & Design", "03 Setup", "04 Development"
+        3. **Module**: The software engineering domain of the task. The options are: "Overall", "Frontend", "Middleware", "Infra", "IoT", "Security"
+        4. **Feature**: What exactly is being done in the task. The options are: "General", "Technical Lead", "Project Manager", "Sprint Artifacts & Meetings", "Technical Analysis", "Functional Analysis", "User Experience (UX)", "User Interface (UI)", "Security Review", "Go-Live support", "Setup Environment + Azure", "Setup Projects", "Authentication & Authorizations", "Monitoring", "Notifications", "Settings" , "Filtering / search"
+        5. **Task**: Summarize the task in a detailed sentence or two.
+        6. **Profile**: The role of the person who will perform the task. The options are: "0 Blended FE dev", "0 Blended MW dev", "0 Blended Overall dev, 0 Blended XR dev", "1 Analyst", "2 Consultant Technical", "3 Senior Consultant Technical", "4 Lead Expert", "5 Manager", "6 Senior Manager", "7 DPH Consultant Technical", "8 DPH Senior Consultant Technical", "9 DPH Lead Expert/Manager"
+        7. **MinDays**: The estimated minimum number of days required to complete the task.
+        8. **RealDays**: The average or most likely number of days required to complete the task.
+        9. **MaxDays**: The estimated maximum number of days required to complete the task.
+        10. **Contingency**: for this write "0" for now.
+        11. **EstimatedDays**: this is a formula that calculates the estimated days based on the MinDays, RealDays, and MaxDays. The formula is: (MinDays + (4 * RealDays) + (4 * MaxDays)) / 9. Make sure to round up to the nearest whole number.
+        12. **EstimatedPrice**: this is a formula that calculates the estimated price based on the EstimatedDays and the cost of the Profile. For now use 200 as the cost per day. The formula is: EstimatedDays * 200.
+        13. **Potential Issues**: List potential risks or issues that might arise, such as “security concerns,” “data compliance requirements,” or “scope changes.”
 
     Return your response in the following JSON format:
     {{
-        "total_duration": "Total project duration in days",
+        "total_duration": "Total project duration in days (based on the EstimatedDays)",
         "tasks": [
             {{
-                "MSCW": "Must Have / Should Have / Could Have",
+                "MSCW": "Must Have / Should Have / Could Have (assign the tasks in that order)",
                 "Area": "Area of work",
                 "Module": "Module category",
                 "Feature": "Feature of the task",
@@ -251,7 +280,7 @@ def ask_openai_for_estimation(prompt):
         "api-key": st.secrets["OPENAI_API_KEY"],
     }
 
-    data = {"messages": [{"role": "user", "content": prompt}], "max_tokens": 1500, "temperature": 0.7}
+    data = {"messages": [{"role": "user", "content": prompt}], "max_tokens": 1500, "temperature": 0.1}
 
     try:
         response = requests.post(
@@ -448,20 +477,20 @@ with tabs[1]:
     st.header("AI Search & Task Estimator")
 
     user_prompt = st.text_area("Describe your project requirements:")
-if st.button("Generate Project Estimation"):
-    if user_prompt:
-        with st.spinner("Generating query..."):
-            search_query = generate_search_query(user_prompt)
+    if st.button("Generate Project Estimation"):
+        if user_prompt:
+            with st.spinner("Generating query..."):
+                search_query = generate_search_query(user_prompt)
 
-        if search_query:
-            with st.spinner("Querying Azure AI Search..."):
-                search_results = query_azure_ai_search(search_query)
+            if search_query:
+                with st.spinner("Querying Azure AI Search..."):
+                    search_results = query_azure_ai_search(search_query)
 
-            if search_results:
-                with st.spinner("Generating project estimation..."):
-                    estimation_prompt = construct_estimation_prompt(search_results, user_prompt)
-                    ai_response = ask_openai_for_estimation(estimation_prompt)
+                if search_results:
+                    with st.spinner("Generating project estimation..."):
+                        estimation_prompt = construct_estimation_prompt(search_results, user_prompt)
+                        ai_response = ask_openai_for_estimation(estimation_prompt)
 
-                if ai_response:
-                    parse_and_display_estimation(ai_response)
+                    if ai_response:
+                        parse_and_display_estimation(ai_response)
 #endregion
