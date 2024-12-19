@@ -211,8 +211,7 @@ def construct_estimation_prompt(search_results, pdf_content, user_prompt):
         3. **Module**: The software engineering domain of the task. The options are: "Overall", "Frontend", "Middleware", "Infra", "IoT", "Security"
         4. **Feature**: What exactly is being done in the task. The options are: "General", "Technical Lead", "Project Manager", "Sprint Artifacts & Meetings", "Technical Analysis", "Functional Analysis", "User Experience (UX)", "User Interface (UI)", "Security Review", "Go-Live support", "Setup Environment + Azure", "Setup Projects", "Authentication & Authorizations", "Monitoring", "Notifications", "Settings" , "Filtering / search"
         5. **Task**: Summarize the task in a detailed sentence or two.
-        6. **Profile**: The role of the person who will perform the task. The options are: "0 Blended FE dev", "0 Blended MW dev", "0 Blended Overall dev, 0 Blended XR dev", "1 Analyst", "2 Consultant Technical", "3 Senior Consultant Technical", "4 Lead Expert", "5 Manager", "6 Senior Manager", "7 DPH Consultant Technical", "8 DPH Senior Consultant Technical", "9 DPH Lead Expert/Manager",
-            "Techincal Lead - Belgium", "Senior .NET developer - Belgium", "Senior Test consultant - Belgium", ".NET developer - Belgium", "Test consultant - Belgium"
+        6. **Profile**: The role of the person who will perform the task. The options are the ones we defined above with their rates.
         7. **MinDays**: The estimated minimum number of days required to complete the task.
         8. **RealDays**: The average or most likely number of days required to complete the task.
         9. **MaxDays**: The estimated maximum number of days required to complete the task.
