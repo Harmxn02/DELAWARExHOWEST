@@ -215,8 +215,8 @@ def construct_estimation_prompt(search_results, user_prompt):
     st.json(tasks_json_output)
 
     #TODO: In the description, at **Profile**: "Offshore" roles have been removed due to OpenAI not knowing the context of when to use those.
-    # The removed roles: "Senior .NET developer - Offshore", "Senior Test consultant - Offshore", ".NET developer - Offshore", "Test consultant - Offshore"
-    # Keep in mind that once you add the "Offshore" roles back, you should remove this line: "- Temporary: You should ignore the "Offshore" roles.".
+        # The removed roles: "Senior .NET developer - Offshore", "Senior Test consultant - Offshore", ".NET developer - Offshore", "Test consultant - Offshore"
+        # Keep in mind that once you add the "Offshore" roles back, you should remove this line: "- Temporary: You should ignore the "Offshore" roles.".
     return f"""
     Context:
     The user has described their project as follows:
