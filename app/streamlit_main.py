@@ -5,7 +5,6 @@ import pandas as pd
 import streamlit as st
 from azure.storage.blob import BlobServiceClient, ContentSettings
 from util.query_roles_and_rates_from_db import fetch_roles_and_rates
-from util.query_roles_and_rates_from_db import fetch_roles_and_rates
 import io
 import json
 
@@ -218,7 +217,6 @@ def construct_estimation_prompt(search_results, user_prompt):
     #TODO: In the description, at **Profile**: "Offshore" roles have been removed due to OpenAI not knowing the context of when to use those.
     # The removed roles: "Senior .NET developer - Offshore", "Senior Test consultant - Offshore", ".NET developer - Offshore", "Test consultant - Offshore"
     # Keep in mind that once you add the "Offshore" roles back, you should remove this line: "- Temporary: You should ignore the "Offshore" roles.".
-    # Keep in mind that once you add the "Offshore" roles back, you should remove this line: "- Temporary: You should ignore the "Offshore" roles.".
     return f"""
     Context:
     The user has described their project as follows:
@@ -243,7 +241,6 @@ def construct_estimation_prompt(search_results, user_prompt):
         - Make sure to use a wide variety of Profiles for the tasks. Don't use the same Profile for every task.
         - Make sure to have different MSCW priorities for the tasks. Make sure to have at least two tasks for each priority.
         - Make sure that the tasks are assigned in order of Must Have then Should Have then Could Have.
-        - Temporary: You should ignore the "Offshore" roles.
         - Temporary: You should ignore the "Offshore" roles.
         - The cost per profile varies: Each Profile has an associated daily rate, which must be used to calculate the EstimatedPrice.
           These rates are as follows:
@@ -275,17 +272,17 @@ def construct_estimation_prompt(search_results, user_prompt):
         7. **MinDays**: The estimated minimum number of days required to complete the task.
         8. **RealDays**: The average or most likely number of days required to complete the task.
         9. **MaxDays**: The estimated maximum number of days required to complete the task.
-        10. **Contingency**: for this write "0" for now.
-        11. **EstimatedDays**: this is a formula that calculates the estimated days based on the MinDays, RealDays, and MaxDays. The formula is: (MinDays + (4 * RealDays) + (4 * MaxDays)) / 9. Make sure to round up to the nearest whole number.
+        10. **Contingency**: For this write "0" for now.
+        11. **EstimatedDays**: This is a value between MinDays and MaxDays.
         12. **EstimatedPrice**: this is a formula that calculates the estimated price based on the EstimatedDays and the cost of the Profile. The formula is: EstimatedDays * the cost of the Profile.
         13. **Potential Issues**: List potential risks or issues that might arise, such as “security concerns,” “data compliance requirements,” or “scope changes.”
 
     Return your response in the following JSON format:
     {{
-        "total_duration": "Total project duration in days (based on the EstimatedDays)",
+        "total_price": "The sum of the EstimatedPrice",
         "tasks": [
             {{
-                "MSCW": "Must Have / Should Have / Could Have (assign the tasks in that order)",
+                "MSCW": "Must Have / Should Have / Could Have",
                 "Area": "Area of work",
                 "Module": "Module category",
                 "Feature": "Feature of the task",
@@ -330,10 +327,10 @@ def ask_openai_for_estimation(prompt):
 def parse_and_display_estimation(response_json):
     try:
         data = json.loads(response_json)
-        total_duration = data.get("total_duration", "N/A")
+        total_price = data.get("total_price", "N/A")
         tasks = data.get("tasks", [])
 
-        st.write(f"### Total Project Duration: {total_duration} days")
+        st.write(f"### Estimated cost of the project: € {total_price}")
 
         if tasks:
             df = pd.DataFrame(tasks)
