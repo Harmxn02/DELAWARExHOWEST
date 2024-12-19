@@ -63,37 +63,7 @@ pip install -r requirements.txt
 
 #### Step 3. Set up environment variables
 
-Inside the `.\app\` directory create a `.streamlit` folder, with inside it a `secrets.toml` file which contain your API keys and configuration settings. Below is an example using placeholder values:
-
-```python
-# secrets.toml
-
-# Azure Document Intelligence Variables
-DOC_INTEL_ENDPOINT = "placeholder"
-DOC_INTEL_API_KEY = "placeholder"
-
-# Azure OpenAI Variables
-OPENAI_ENDPOINT = "placeholder"
-OPENAI_API_KEY = "placeholder"
-
-# Azure AI Search
-AZURE_SEARCH_ENDPOINT = "placeholder"
-AZURE_SEARCH_API_KEY = "placeholder"
-AZURE_SEARCH_INDEX_NAME = "placeholder"
-
-# Azure Blob Storage Variables
-AZURE_STORAGE_ACCOUNT_NAME = "placeholder"
-AZURE_CONTAINER_NAME = "placeholder"
-AZURE_KNOWLEDGE_BASE_CONTAINER_NAME = "placeholder"
-AZURE_STORAGE_CONNECTION_STRING = "placeholder"
-
-# Azure Database for MySQL Variables 
-AZ_db_host = "placeholder"
-AZ_db_user = "placeholder"
-AZ_db_password = "placeholder"
-AZ_db_name = "placeholder"
-AZ_db_port = "placeholder"
-```
+Read the guide at this path [/documents/env/README.md](./documents/env/README.md)
 
 #### Step 4. Run the streamlit application
 
