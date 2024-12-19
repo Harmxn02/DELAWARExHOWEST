@@ -116,29 +116,58 @@ def excel_to_json(blob_data, start_id):
     
     # Wrap blob_data in BytesIO to read it as a file-like object
     excel_file = io.BytesIO(blob_data)
+    df = pd.read_excel(excel_file, sheet_name=None)
+    sheet = None
     
-    # Load the Excel file into a DataFrame
-    df = pd.read_excel(excel_file)
+    # Check for specific sheets
+    if "Tasks" in df:
+        sheet = df["Tasks"]
+    elif "Sheet1" in df:
+        sheet = df["Sheet1"]
+    else:
+        print("No valid sheet ('Tasks' or 'Sheet1') found. Skipping this file.")
+        return []
+
+    # Ensure numeric fields are cast to integers
+    numeric_fields = ["MinDays", "RealDays", "MaxDays", "EstimatedDays", "EstimatedPrice"]
+    for field in numeric_fields:
+        if field in sheet.columns:
+            sheet[field] = (
+                sheet[field]
+                .fillna(0)
+                .apply(lambda x: int(float(str(x).strip('%')) if isinstance(x, str) and x.endswith('%') else x))
+            )    
+    
+    # Ensure the "contingency" field is always a string
+    if "Contingency" in sheet.columns:
+        sheet["Contingency"] = sheet["Contingency"].fillna("0").astype(str)
+    
+    # Ensure all fields are cast to strings if needed
+    string_fields = ["Task", "MSCW", "Area", "Module", "Feature", "Profile", "PotentialIssues"]
+    for field in string_fields:
+        if field in sheet.columns:
+            sheet[field] = sheet[field].fillna("").astype(str)
+
 
     # Convert DataFrame rows to JSON objects
     documents = []
     current_id = start_id
-    for _, row in df.iterrows():
+    for _, row in sheet.iterrows():
         document = {
-            "id": str(current_id),
+            "id": str(current_id),  # ID must always be a string
             "Task": row.get("Task", ""),
             "MSCW": row.get("MSCW", ""),
             "Area": row.get("Area", ""),
             "Module": row.get("Module", ""),
             "Feature": row.get("Feature", ""),
             "Profile": row.get("Profile", ""),
-            "MinDays": row.get("MinDays", 0),
-            "RealDays": row.get("RealDays", 0),
-            "MaxDays": row.get("MaxDays", 0),
-            "Contingency": row.get("Contingency", 0),
-            "EstimatedDays": row.get("EstimatedDays", 0),
-            "EstimatedPrice": row.get("EstimatedPrice", 0),
-            "PotentialIssues": ", ".join(row["potential_issues"]) if isinstance(row.get("potential_issues"), list) else "",
+            "MinDays": int(row.get("MinDays", 0)),
+            "RealDays": int(row.get("RealDays", 0)),
+            "MaxDays": int(row.get("MaxDays", 0)),
+            "Contingency": row.get("Contingency", "0"),  # String field
+            "EstimatedDays": int(row.get("EstimatedDays", 0)),
+            "EstimatedPrice": float(row.get("EstimatedPrice", 0)),  # Ensure float for Edm.Double
+            "PotentialIssues": row.get("PotentialIssues", ""),
         }
         documents.append(document)
         current_id += 1
