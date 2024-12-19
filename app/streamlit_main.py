@@ -192,19 +192,6 @@ def construct_estimation_prompt(search_results, pdf_content, user_prompt):
         - Calculate the overall project duration, including potential buffer times for dependencies or risks.
         - Present the estimation in a structured format, such as a table or JSON.
 
-    General pointers:
-        - Keep the estimated days low. Anywhere from 0 for MinDays to 4 days for MaxDays is a good estimate.
-        - Make sure that you think about how many tasks there need to be. Don't just copy the amount of tasks from the search_results.
-        - Make sure that the "Task" description contains relevant information from the requirements of the user prompt.
-        - Make sure not to use the same Area for every task. Try to distribute the tasks across different Areas.
-        - Make sure to use a wide variety of Profiles for the tasks. Don't use the same Profile for every task.
-        - Make sure to have different MSCW priorities for the tasks. Make sure to have at least two tasks for each priority.
-        - Make sure that the tasks are assigned in order of Must Have then Should Have then Could Have.
-        - Make sure that not every task contains "Potential Issues". You may assign them, but only if the possibility of it happening is likely.
-        - Temporary: You should ignore the "Offshore" roles.
-        - The cost per profile varies: Each Profile has an associated daily rate, which must be used to calculate the EstimatedPrice.
-          These rates are as follows: {fetch_roles_and_rates()}
-
     Description:
         1. **MSCW**: The priority of the task. The options are: "1 Must Have", "2 Should Have", "3 Could Have"
         2. **Area**: The area of the project where the task belongs. The options are: "01 Analyze & Design", "03 Setup", "04 Development"
@@ -219,6 +206,23 @@ def construct_estimation_prompt(search_results, pdf_content, user_prompt):
         11. **EstimatedDays**: This is a value between MinDays and MaxDays.
         12. **EstimatedPrice**: this is a formula that calculates the estimated price based on the EstimatedDays and the cost of the Profile. The formula is: EstimatedDays * the cost of the Profile.
         13. **Potential Issues**: List potential risks or issues that might arise, such as “security concerns,” “data compliance requirements,” or “scope changes.”
+
+    General pointers:
+        - Keep the estimated days low. Anywhere from 0 for MinDays to 4 days for MaxDays is a good estimate.
+        - Make sure that you think about how many tasks there need to be. Don't just copy the amount of tasks from the search_results.
+        - Make sure that the "Task" description contains relevant information from the requirements of the user prompt.
+        - Make sure not to use the same Area for every task. Try to distribute the tasks across different Areas.
+        - Make sure to use a wide variety of Profiles for the tasks. Don't use the same Profile for every task. Make sure to choose the right Profile for the right task (the 'Task' field describes the task).
+        - Make sure to have different MSCW priorities for the tasks.
+        - Make sure to have more "Must Have" and "Should Have" tasks than "Could Have" tasks. The ratio should be 2:1:1 respectively.
+        - Make sure that the tasks are assigned in order of Must Have then Should Have then Could Have.
+        - Make sure that not every task contains "Potential Issues". You may assign them, but only if the possibility of it happening is likely.
+        - Temporary: You should ignore the "Offshore" roles.
+        - The cost per profile varies: Each Profile has an associated daily rate, which must be used to calculate the EstimatedPrice.
+          These rates are as follows: {fetch_roles_and_rates()}. These rates are the most up-to-date rates. You will NOT deviate from these rates, regardless of what the search results says.
+        - Make sure to use the correct Module for the chosen Profile. If the Profile is "0 Blended MW dev" then the Module should be "Middleware", for example.
+
+
 
     Return your response in the following JSON format:
     {{
