@@ -4,6 +4,8 @@ import requests
 import pandas as pd
 import streamlit as st
 from azure.storage.blob import BlobServiceClient, ContentSettings
+from util.query_roles_and_rates_from_db import fetch_roles_and_rates
+from util.query_roles_and_rates_from_db import fetch_roles_and_rates
 import io
 import json
 
@@ -215,6 +217,8 @@ def construct_estimation_prompt(search_results, user_prompt):
 
     #TODO: In the description, at **Profile**: "Offshore" roles have been removed due to OpenAI not knowing the context of when to use those.
     # The removed roles: "Senior .NET developer - Offshore", "Senior Test consultant - Offshore", ".NET developer - Offshore", "Test consultant - Offshore"
+    # Keep in mind that once you add the "Offshore" roles back, you should remove this line: "- Temporary: You should ignore the "Offshore" roles.".
+    # Keep in mind that once you add the "Offshore" roles back, you should remove this line: "- Temporary: You should ignore the "Offshore" roles.".
     return f"""
     Context:
     The user has described their project as follows:
@@ -239,6 +243,8 @@ def construct_estimation_prompt(search_results, user_prompt):
         - Make sure to use a wide variety of Profiles for the tasks. Don't use the same Profile for every task.
         - Make sure to have different MSCW priorities for the tasks. Make sure to have at least two tasks for each priority.
         - Make sure that the tasks are assigned in order of Must Have then Should Have then Could Have.
+        - Temporary: You should ignore the "Offshore" roles.
+        - Temporary: You should ignore the "Offshore" roles.
         - The cost per profile varies: Each Profile has an associated daily rate, which must be used to calculate the EstimatedPrice.
           These rates are as follows:
             Technical Lead - Belgium: €230/day
