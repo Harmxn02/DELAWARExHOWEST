@@ -226,7 +226,7 @@ def upload_tasks_from_blob_storage():
     # Upload all documents to the search index
     if all_documents:
         result = client.upload_documents(all_documents)
-        print(f"Successfully uploaded {len(all_documents)} documents: {result}")
+        print(f"Successfully uploaded {len(all_documents)} documents to the search index.")
     else:
         print("No Excel files found or no data to upload.")
 
