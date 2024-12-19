@@ -7,6 +7,9 @@ from azure.storage.blob import BlobServiceClient, ContentSettings
 import io
 import json
 
+# res = fetch_roles_and_rates()
+# print(res)
+
 #region PDF Analysis and Upload
 def upload_pdf_to_azure(uploaded_file):
     """
