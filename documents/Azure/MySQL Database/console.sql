@@ -32,6 +32,16 @@ CREATE TABLE project_assignments (
      FOREIGN KEY (employeeId) REFERENCES employees(id) ON DELETE CASCADE
 );
 
+
+CREATE TABLE roles_rates (
+                             id INT AUTO_INCREMENT PRIMARY KEY,
+                             role VARCHAR(100) NOT NULL,
+                             rate DECIMAL(10, 2) NOT NULL
+);
+
+
+
+
 INSERT INTO projects (projectTitle, dateStarted, isActive) VALUES
     ('Website Redesign', '2023-01-10', TRUE),
     ('Mobile App Development', '2023-03-05', TRUE),
@@ -217,6 +227,21 @@ INSERT INTO project_assignments (projectId, employeeId, assignedDate) VALUES
     (5, 2, '2023-06-02'),
     (5, 4, '2023-06-05');
 
+
+INSERT INTO roles_rates (role, rate) VALUES
+    ('0 Blended FE dev', 200.00),
+    ('0 Blended MW dev', 200.00),
+    ('0 Blended Overall dev', 200.00),
+    ('0 Blended XR dev', 100.00),
+    ('1 Analyst', 100.00),
+    ('2 Consultant Technical', 150.00),
+    ('3 Senior Consultant Technical', 200.00),
+    ('4 Lead Expert', 220.00),
+    ('5 Manager', 230.00),
+    ('6 Senior Manager', 230.00),
+    ('7 DPH Consultant Technical', 200.00),
+    ('8 DPH Senior Consultant Technical', 200.00),
+    ('9 DPH Lead Expert/Manager', 200.00);
 
 
 
