@@ -30,6 +30,8 @@ Wait for the deployment to complete.
 
 ## After creating the resource
 
+> You can either follow the guide below, or simply execute the `build_knowledge_base.py` script in the `/scripts/` directory
+
 After creating the resource you need to create an index which will contain the knowledge base's data. To do this follow these steps:
 
 1. Navigate to the Azure portal
