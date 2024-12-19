@@ -215,8 +215,8 @@ def construct_estimation_prompt(search_results, user_prompt):
     st.json(tasks_json_output)
 
     #TODO: In the description, at **Profile**: "Offshore" roles have been removed due to OpenAI not knowing the context of when to use those.
-    # The removed roles: "Senior .NET developer - Offshore", "Senior Test consultant - Offshore", ".NET developer - Offshore", "Test consultant - Offshore"
-    # Keep in mind that once you add the "Offshore" roles back, you should remove this line: "- Temporary: You should ignore the "Offshore" roles.".
+        # The removed roles: "Senior .NET developer - Offshore", "Senior Test consultant - Offshore", ".NET developer - Offshore", "Test consultant - Offshore"
+        # Keep in mind that once you add the "Offshore" roles back, you should remove this line: "- Temporary: You should ignore the "Offshore" roles.".
     return f"""
     Context:
     The user has described their project as follows:
@@ -237,10 +237,13 @@ def construct_estimation_prompt(search_results, user_prompt):
 
     General pointers:
         - Keep the estimated days low. Anywhere from 0 for MinDays to 4 days for MaxDays is a good estimate.
+        - Make sure that you think about how many tasks there need to be. Don't just copy the amount of tasks from the search_results.
+        - Make sure that the "Task" description contains relevant information from the requirements of the user prompt.
         - Make sure not to use the same Area for every task. Try to distribute the tasks across different Areas.
         - Make sure to use a wide variety of Profiles for the tasks. Don't use the same Profile for every task.
         - Make sure to have different MSCW priorities for the tasks. Make sure to have at least two tasks for each priority.
         - Make sure that the tasks are assigned in order of Must Have then Should Have then Could Have.
+        - Make sure that not every task contains "Potential Issues". You may assign them, but only if the possibility of it happening is likely.
         - Temporary: You should ignore the "Offshore" roles.
         - The cost per profile varies: Each Profile has an associated daily rate, which must be used to calculate the EstimatedPrice.
           These rates are as follows:
@@ -330,11 +333,13 @@ def parse_and_display_estimation(response_json):
         total_price = data.get("total_price", "N/A")
         tasks = data.get("tasks", [])
 
-        st.write(f"### Estimated cost of the project: € {total_price}")
+        st.write("### Project Estimations:")
 
         if tasks:
             df = pd.DataFrame(tasks)
             st.dataframe(df)
+
+            st.write(f"## Estimated cost of the project: € {total_price}")
 
             # Download as Excel
             excel_buffer = io.BytesIO()
