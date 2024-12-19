@@ -220,6 +220,7 @@ def construct_estimation_prompt(search_results, pdf_content, user_prompt):
         - Temporary: You should ignore the "Offshore" roles.
         - The cost per profile varies: Each Profile has an associated daily rate, which must be used to calculate the EstimatedPrice.
           These rates are as follows: {fetch_roles_and_rates()}. These rates are the most up-to-date rates. You will NOT deviate from these rates, regardless of what the search results says.
+        - Make sure to use the correct Profile for the task. The search results may contain incorrect Profiles, so you must choose the correct one based on the task description. Also make sure the profiles exist in the rates table.
         - Make sure to use the correct Module for the chosen Profile. If the Profile is "0 Blended MW dev" then the Module should be "Middleware", for example.
 
 
