@@ -203,8 +203,8 @@ def construct_estimation_prompt(search_results, pdf_content, user_prompt):
         8. **RealDays**: The average or most likely number of days required to complete the task.
         9. **MaxDays**: The estimated maximum number of days required to complete the task.
         10. **Contingency**: For this write "0" for now.
-        11. **EstimatedDays**: This is a value between MinDays and MaxDays, which means it can also be 0. The formula rounds EstimatedDays to the nearest 0.5, rounding down if it's greater than RealDays and up otherwise. If the EstimatedDays is 0, then you should only charge half of the Profile's daily rate.
-        12. **EstimatedPrice**: this is a formula that calculates the estimated price based on the EstimatedDays and the cost of the Profile. The formula is: EstimatedDays * the cost of the Profile.
+        11. **EstimatedDays**: This is a value between MinDays and MaxDays, which means it can also be 0. The formula rounds EstimatedDays to the nearest number, rounding down if it's greater than RealDays and up otherwise.
+        12. **EstimatedPrice**: this is a formula that calculates the estimated price based on the EstimatedDays and the cost of the Profile. The formula is: EstimatedDays * the cost of the Profile. If the EstimatedDays is 0, then you should only charge half of the Profile's daily rate.
         13. **Potential Issues**: List potential risks or issues that might arise, such as “security concerns,” “data compliance requirements,” or “scope changes.”
 
     General pointers:
