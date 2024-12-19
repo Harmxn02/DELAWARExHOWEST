@@ -230,19 +230,19 @@ def construct_estimation_prompt(search_results, pdf_content, user_prompt):
         "total_price": "The sum of the EstimatedPrice",
         "tasks": [
             {{
-                "MSCW": "Must Have / Should Have / Could Have",
-                "Area": "Area of work",
-                "Module": "Module category",
-                "Feature": "Feature of the task",
-                "Task": "Task description",
-                "Profile": "Profile needed for the task",
-                "MinDays": "Minimum estimated days for the task",
-                "RealDays": "Actual days taken to complete the task",
-                "MaxDays": "Maximum estimated days for the task",
-                "% Contingency": "Contingency percentage for the task",
-                "EstimatedDays": "Estimated duration for the task",
-                "EstimatedPrice": "Estimated price for the task",
-                "Potential Issues": "Any potential risks or issues impacting the task"
+                "MSCW": "1 Must Have",
+                "Area": "01 Analyze & Design",
+                "Module": "Frontend",
+                "Feature": "Technical Analysis",
+                "Task": "Analysis of the design requirements for the client",
+                "Profile": "0 Blended FE dev",
+                "MinDays": 1,
+                "RealDays": 2,
+                "MaxDays": 2,
+                "% Contingency": "0%",
+                "EstimatedDays": 2,
+                "EstimatedPrice": 400,
+                "Potential Issues": "We might need to consult with the client for additional requirements"
             }},
             ...
         ]
