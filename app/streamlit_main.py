@@ -203,23 +203,7 @@ def construct_estimation_prompt(search_results, pdf_content, user_prompt):
         - Make sure that not every task contains "Potential Issues". You may assign them, but only if the possibility of it happening is likely.
         - Temporary: You should ignore the "Offshore" roles.
         - The cost per profile varies: Each Profile has an associated daily rate, which must be used to calculate the EstimatedPrice.
-          These rates are as follows:
-            Technical Lead - Belgium: €230/day
-            Senior .NET Developer - Belgium: €200/day
-            Senior Test Consultant - Belgium: €200/day
-            .NET Developer - Belgium: €200/day
-            Test Consultant - Belgium: €200/day
-            Senior .NET Developer - Offshore: €80/day
-            Senior Test Consultant - Offshore: €80/day
-            .NET Developer - Offshore: €80/day
-            Test Consultant - Offshore: €80/day
-            Blended FE/MW/Overall Dev: €200/day
-            Analyst: €100/day
-            Consultant Technical: €150/day
-            Senior Consultant Technical: €200/day
-            Lead Expert: €220/day
-            Manager/Senior Manager: €230/day
-            DPH Consultant Technical/Senior Consultant Technical/Lead Expert/Manager: €200/day
+          These rates are as follows: {fetch_roles_and_rates()}
 
     Description:
         1. **MSCW**: The priority of the task. The options are: "1 Must Have", "2 Should Have", "3 Could Have"
