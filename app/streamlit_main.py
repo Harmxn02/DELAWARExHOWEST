@@ -4,8 +4,12 @@ import requests
 import pandas as pd
 import streamlit as st
 from azure.storage.blob import BlobServiceClient, ContentSettings
+from util.query_roles_and_rates_from_db import fetch_roles_and_rates
 import io
 import json
+
+# res = fetch_roles_and_rates()
+# print(res)
 
 #region PDF Analysis and Upload
 def upload_pdf_to_azure(uploaded_file):
@@ -210,6 +214,9 @@ def construct_estimation_prompt(search_results, user_prompt):
     # Print the JSON array
     st.json(tasks_json_output)
 
+    #TODO: In the description, at **Profile**: "Offshore" roles have been removed due to OpenAI not knowing the context of when to use those.
+    # The removed roles: "Senior .NET developer - Offshore", "Senior Test consultant - Offshore", ".NET developer - Offshore", "Test consultant - Offshore"
+    # Keep in mind that once you add the "Offshore" roles back, you should remove this line: "- Temporary: You should ignore the "Offshore" roles.".
     return f"""
     Context:
     The user has described their project as follows:
@@ -220,11 +227,11 @@ def construct_estimation_prompt(search_results, user_prompt):
 
     Instructions:
         - Create a detailed project estimation from the user prompt using these tasks.
-        Do not blindly copy the tasks but use them as a guideline to create the new estimated task.
+        Do not blindly copy the tasks but use them as a guideline to create the new estimated tasks.
         - For each task:
             - Provide a clear timeline (in days) for its completion.
             - Identify any risks, delays, or dependencies that could impact the task.
-            - Include the task's estimated price and any required resources or roles.
+            - Include the task's estimated price (based on the Profile and EstimatedDays) and any required resources or roles.
         - Calculate the overall project duration, including potential buffer times for dependencies or risks.
         - Present the estimation in a structured format, such as a table or JSON.
 
@@ -233,28 +240,49 @@ def construct_estimation_prompt(search_results, user_prompt):
         - Make sure not to use the same Area for every task. Try to distribute the tasks across different Areas.
         - Make sure to use a wide variety of Profiles for the tasks. Don't use the same Profile for every task.
         - Make sure to have different MSCW priorities for the tasks. Make sure to have at least two tasks for each priority.
-        - Make sure to vary in your usage of Profile. Do not use the same Profile for every task.
+        - Make sure that the tasks are assigned in order of Must Have then Should Have then Could Have.
+        - Temporary: You should ignore the "Offshore" roles.
+        - The cost per profile varies: Each Profile has an associated daily rate, which must be used to calculate the EstimatedPrice.
+          These rates are as follows:
+            Technical Lead - Belgium: €230/day
+            Senior .NET Developer - Belgium: €200/day
+            Senior Test Consultant - Belgium: €200/day
+            .NET Developer - Belgium: €200/day
+            Test Consultant - Belgium: €200/day
+            Senior .NET Developer - Offshore: €80/day
+            Senior Test Consultant - Offshore: €80/day
+            .NET Developer - Offshore: €80/day
+            Test Consultant - Offshore: €80/day
+            Blended FE/MW/Overall Dev: €200/day
+            Analyst: €100/day
+            Consultant Technical: €150/day
+            Senior Consultant Technical: €200/day
+            Lead Expert: €220/day
+            Manager/Senior Manager: €230/day
+            DPH Consultant Technical/Senior Consultant Technical/Lead Expert/Manager: €200/day
 
+    Description:
         1. **MSCW**: The priority of the task. The options are: "1 Must Have", "2 Should Have", "3 Could Have"
         2. **Area**: The area of the project where the task belongs. The options are: "01 Analyze & Design", "03 Setup", "04 Development"
         3. **Module**: The software engineering domain of the task. The options are: "Overall", "Frontend", "Middleware", "Infra", "IoT", "Security"
         4. **Feature**: What exactly is being done in the task. The options are: "General", "Technical Lead", "Project Manager", "Sprint Artifacts & Meetings", "Technical Analysis", "Functional Analysis", "User Experience (UX)", "User Interface (UI)", "Security Review", "Go-Live support", "Setup Environment + Azure", "Setup Projects", "Authentication & Authorizations", "Monitoring", "Notifications", "Settings" , "Filtering / search"
         5. **Task**: Summarize the task in a detailed sentence or two.
-        6. **Profile**: The role of the person who will perform the task. The options are: "0 Blended FE dev", "0 Blended MW dev", "0 Blended Overall dev, 0 Blended XR dev", "1 Analyst", "2 Consultant Technical", "3 Senior Consultant Technical", "4 Lead Expert", "5 Manager", "6 Senior Manager", "7 DPH Consultant Technical", "8 DPH Senior Consultant Technical", "9 DPH Lead Expert/Manager"
+        6. **Profile**: The role of the person who will perform the task. The options are: "0 Blended FE dev", "0 Blended MW dev", "0 Blended Overall dev, 0 Blended XR dev", "1 Analyst", "2 Consultant Technical", "3 Senior Consultant Technical", "4 Lead Expert", "5 Manager", "6 Senior Manager", "7 DPH Consultant Technical", "8 DPH Senior Consultant Technical", "9 DPH Lead Expert/Manager",
+            "Techincal Lead - Belgium", "Senior .NET developer - Belgium", "Senior Test consultant - Belgium", ".NET developer - Belgium", "Test consultant - Belgium"
         7. **MinDays**: The estimated minimum number of days required to complete the task.
         8. **RealDays**: The average or most likely number of days required to complete the task.
         9. **MaxDays**: The estimated maximum number of days required to complete the task.
-        10. **Contingency**: for this write "0" for now.
-        11. **EstimatedDays**: this is a formula that calculates the estimated days based on the MinDays, RealDays, and MaxDays. The formula is: (MinDays + (4 * RealDays) + (4 * MaxDays)) / 9. Make sure to round up to the nearest whole number.
-        12. **EstimatedPrice**: this is a formula that calculates the estimated price based on the EstimatedDays and the cost of the Profile. For now use 200 as the cost per day. The formula is: EstimatedDays * 200.
+        10. **Contingency**: For this write "0" for now.
+        11. **EstimatedDays**: This is a value between MinDays and MaxDays.
+        12. **EstimatedPrice**: this is a formula that calculates the estimated price based on the EstimatedDays and the cost of the Profile. The formula is: EstimatedDays * the cost of the Profile.
         13. **Potential Issues**: List potential risks or issues that might arise, such as “security concerns,” “data compliance requirements,” or “scope changes.”
 
     Return your response in the following JSON format:
     {{
-        "total_duration": "Total project duration in days (based on the EstimatedDays)",
+        "total_price": "The sum of the EstimatedPrice",
         "tasks": [
             {{
-                "MSCW": "Must Have / Should Have / Could Have (assign the tasks in that order)",
+                "MSCW": "Must Have / Should Have / Could Have",
                 "Area": "Area of work",
                 "Module": "Module category",
                 "Feature": "Feature of the task",
@@ -299,10 +327,10 @@ def ask_openai_for_estimation(prompt):
 def parse_and_display_estimation(response_json):
     try:
         data = json.loads(response_json)
-        total_duration = data.get("total_duration", "N/A")
+        total_price = data.get("total_price", "N/A")
         tasks = data.get("tasks", [])
 
-        st.write(f"### Total Project Duration: {total_duration} days")
+        st.write(f"### Estimated cost of the project: € {total_price}")
 
         if tasks:
             df = pd.DataFrame(tasks)
