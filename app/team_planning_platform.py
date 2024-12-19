@@ -3,31 +3,10 @@ import pandas as pd
 import pymysql
 import json
 
+from util.create_connection_to_db import create_connection
+
 st.set_page_config(layout="wide", page_title="Team Planning Platform")
 st.title("Team Planning Platform")
-
-def create_connection():
-    """
-    Establishes a connection to the MySQL database using credentials stored in Streamlit secrets.
-
-    Returns:
-        pymysql.connections.Connection: A connection object to the MySQL database if successful.
-        None: If the connection attempt fails.
-
-    Raises:
-        pymysql.MySQLError: If there is an error connecting to the MySQL database.
-    """
-    try:
-        connection = pymysql.connect(
-            host=str(st.secrets["AZ_db_host"]),
-            user=str(st.secrets["AZ_db_user"]),
-            password=str(st.secrets["AZ_db_password"]),
-            database=str(st.secrets["AZ_db_name"]),
-        )
-        return connection
-    except pymysql.MySQLError as e:
-        st.error(f"Failed to connect to the database: {e}")
-        return None
 
 def fetch_employees():
     """
