@@ -257,7 +257,7 @@ def ask_openai_for_estimation(prompt):
 
     data = {
         "messages": [{"role": "user", "content": prompt}],
-        "max_tokens": 1500,
+        "max_tokens": 3000,
         "temperature": 0.1
     }
 
