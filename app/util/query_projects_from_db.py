@@ -1,4 +1,5 @@
 import pandas as pd
+import streamlit as st
 from util.create_connection_to_db import create_connection
 
 def fetch_projects():

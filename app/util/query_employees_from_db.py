@@ -1,4 +1,5 @@
 import pandas as pd
+import streamlit as st
 from util.create_connection_to_db import create_connection
 
 def fetch_employees():
@@ -17,5 +18,5 @@ def fetch_employees():
             connection.close()
             return df
         except Exception as e:
-            print(f"Failed to fetch employees: {e}")
+            st.error(f"Failed to fetch employees: {e}")
     return pd.DataFrame()
