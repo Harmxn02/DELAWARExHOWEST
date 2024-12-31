@@ -276,7 +276,6 @@ def ask_openai_for_estimation(prompt):
 
 def parse_and_display_estimation(response_json):
     try:
-        
         if not response_json:
             st.error("Received empty response for estimation.")
             return
@@ -284,7 +283,7 @@ def parse_and_display_estimation(response_json):
         data = json.loads(response_json)
         total_price = data.get("total_price", "N/A")
         tasks = data.get("tasks", [])
-          
+        
         if not tasks:
             st.error("No tasks found in the estimation.")
             return
@@ -296,8 +295,7 @@ def parse_and_display_estimation(response_json):
             df = pd.DataFrame(tasks)
             st.dataframe(df)
 
-            st.write(f"## Estimated cost of the project: € {total_price}")
-
+            # Prepare Excel download
             excel_buffer = io.BytesIO()
             with pd.ExcelWriter(excel_buffer, engine="openpyxl") as writer:
                 df.to_excel(writer, index=False, sheet_name="Project Estimation")
@@ -309,6 +307,20 @@ def parse_and_display_estimation(response_json):
                 file_name="project_estimation.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             )
+
+            # Prepare JSON download
+            json_data = {
+                "total_price": total_price,
+                "tasks": tasks,
+            }
+            json_string = json.dumps(json_data, indent=4)
+            st.download_button(
+                label="Download Estimation as JSON",
+                data=json_string,
+                file_name="project_estimation.json",
+                mime="application/json",
+            )
+
         else:
             st.error("No tasks found in the estimation.")
     except json.JSONDecodeError as e:
