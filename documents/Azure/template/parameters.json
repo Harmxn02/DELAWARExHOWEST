@@ -1,0 +1,24 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "searchServices_harmansinghaisearch_name": {
+            "value": null
+        },
+        "storageAccounts_harmansinghstorage_name": {
+            "value": null
+        },
+        "accounts_harmansinghazureopenai_name": {
+            "value": null
+        },
+        "flexibleServers_harmansinghmysqldatabase_name": {
+            "value": null
+        },
+        "accounts_harma_m32uhu5n_swedencentral_name": {
+            "value": null
+        },
+        "accounts_harmansinghdocumentintelligence_name": {
+            "value": null
+        }
+    }
+}
