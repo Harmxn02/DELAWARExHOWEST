@@ -232,7 +232,6 @@ def construct_estimation_prompt(search_results, user_prompt):
 
     Return your response in the following JSON format:
     {{
-        "total_price": "The sum of the EstimatedPrice",
         "tasks": [
             {{
                 "MSCW": "1 Must Have",
