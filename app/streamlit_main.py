@@ -280,25 +280,29 @@ def ask_openai_for_estimation(prompt):
 
 def parse_and_display_estimation(response_json):
     try:
-        
+        # Check if response_json is empty
         if not response_json:
             st.error("Received empty response for estimation.")
             return
         
+        # Parse the response JSON
         data = json.loads(response_json)
         tasks = data.get("tasks", [])
-          
+        
+        # Check if tasks are present
         if not tasks:
             st.error("No tasks found in the estimation.")
             return
 
+        # Display title for project estimation
+        st.write(f"### Estimated Project")
 
-        st.write(f"### Estimated project")
-
+        # Display tasks as a DataFrame
         if tasks:
             df = pd.DataFrame(tasks)
             st.dataframe(df)
 
+            # Generate Excel download option
             excel_buffer = io.BytesIO()
             with pd.ExcelWriter(excel_buffer, engine="openpyxl") as writer:
                 df.to_excel(writer, index=False, sheet_name="Project Estimation")
@@ -310,8 +314,18 @@ def parse_and_display_estimation(response_json):
                 file_name="project_estimation.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             )
+            
+            # Generate JSON download option
+            json_data = json.dumps(tasks, indent=4)  # Convert tasks to formatted JSON
+            st.download_button(
+                label="Download Estimation as JSON",
+                data=json_data,
+                file_name="project_estimation.json",
+                mime="application/json",
+            )
         else:
             st.error("No tasks found in the estimation.")
+    
     except json.JSONDecodeError as e:
         st.error(f"JSON decoding error: {str(e)}")
     except Exception as e:
