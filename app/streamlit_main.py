@@ -285,7 +285,6 @@ def parse_and_display_estimation(response_json):
             return
         
         data = json.loads(response_json)
-        total_price = data.get("total_price", "N/A")
         tasks = data.get("tasks", [])
           
         if not tasks:
@@ -293,13 +292,11 @@ def parse_and_display_estimation(response_json):
             return
 
 
-        st.write(f"### Estimated cost of the project: € {total_price}")
+        st.write(f"### Estimated project")
 
         if tasks:
             df = pd.DataFrame(tasks)
             st.dataframe(df)
-
-            st.write(f"## Estimated cost of the project: € {total_price}")
 
             excel_buffer = io.BytesIO()
             with pd.ExcelWriter(excel_buffer, engine="openpyxl") as writer:
@@ -375,21 +372,21 @@ with tabs[1]:
     st.header("AI Search & Task Estimator")
 
     user_prompt = st.text_area("Describe your project requirements:")
-if st.button("Generate Project Estimation"):
-    if user_prompt:
-        with st.spinner("Generating query..."):
-            search_query = generate_search_query(user_prompt)
+    if st.button("Generate Project Estimation"):
+        if user_prompt:
+            with st.spinner("Generating query..."):
+                search_query = generate_search_query(user_prompt)
 
-        if search_query:
-            with st.spinner("Querying Azure AI Search..."):
-                search_results = query_azure_ai_search(search_query)
+            if search_query:
+                with st.spinner("Querying Azure AI Search..."):
+                    search_results = query_azure_ai_search(search_query)
 
-            if search_results:
-                with st.spinner("Generating project estimation..."):
-                    estimation_prompt = construct_estimation_prompt(search_results, user_prompt)
-                    ai_response = ask_openai_for_estimation(estimation_prompt)
+                if search_results:
+                    with st.spinner("Generating project estimation..."):
+                        estimation_prompt = construct_estimation_prompt(search_results, user_prompt)
+                        ai_response = ask_openai_for_estimation(estimation_prompt)
 
-                if ai_response:
-                    parse_and_display_estimation(ai_response)
+                    if ai_response:
+                        parse_and_display_estimation(ai_response)
 #endregion
 
