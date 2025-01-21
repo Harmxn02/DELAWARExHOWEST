@@ -345,7 +345,7 @@ with tabs[0]:
                 if pdf_url:
                     st.session_state.pdf_content = analyze_pdf(pdf_url, is_url=True)
 
-        if st.session_state.pdf_content and st.button("Generate Project Estimation"):
+        if st.session_state.pdf_content and st.button("Generate Project Estimation", key="generate_button_0"):
             with st.spinner("Generating query..."):
                 search_query = generate_search_query(user_prompt, pdf_content=st.session_state.pdf_content)
 
@@ -357,7 +357,6 @@ with tabs[0]:
                     with st.spinner("Generating project estimation..."):
                         estimation_prompt = construct_estimation_prompt(
                             search_results,
-                            st.session_state.pdf_content,
                             user_prompt
                         )
                         ai_response = ask_openai_for_estimation(estimation_prompt)
@@ -373,7 +372,7 @@ with tabs[1]:
     st.header("AI Search & Task Estimator")
 
     user_prompt = st.text_area("Describe your project requirements:")
-    if st.button("Generate Project Estimation"):
+    if st.button("Generate Project Estimation", key="generate_button_1"):
         if user_prompt:
             with st.spinner("Generating query..."):
                 search_query = generate_search_query(user_prompt)
@@ -390,4 +389,3 @@ with tabs[1]:
                     if ai_response:
                         parse_and_display_estimation(ai_response)
 #endregion
-
