@@ -173,9 +173,11 @@ def construct_estimation_prompt(search_results, user_prompt):
         for result in search_results
     ])
     
-    tasks_json = [json.dumps(result, indent=4) for result in search_results]
-    tasks_json_output = '[\n' + ',\n'.join(tasks_json) + '\n]'
-    st.json(tasks_json_output)
+    # Create a collapse for displaying the detailed JSON result
+    with st.expander("Click to view detailed JSON response"):
+        tasks_json = [json.dumps(result, indent=4) for result in search_results]
+        tasks_json_output = '[\n' + ',\n'.join(tasks_json) + '\n]'
+        st.text(tasks_json_output)  # Use st.text() to show the JSON within the collapsible section
 
     return f"""
     Context:
