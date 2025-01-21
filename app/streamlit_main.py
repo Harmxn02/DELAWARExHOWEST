@@ -323,6 +323,16 @@ def parse_and_display_estimation(response_json):
                 file_name="project_estimation.json",
                 mime="application/json",
             )
+            
+            
+            # Export profiles to JSON
+            profile_data = df["Profile"].to_json(index=False).encode("utf-8")
+            st.download_button(
+                label="Download Profiles as JSON",
+                data=profile_data,
+                file_name="profiles.json",
+                mime="application/json",
+            )
         else:
             st.error("No tasks found in the estimation.")
     
