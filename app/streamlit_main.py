@@ -307,28 +307,33 @@ def parse_and_display_estimation(response_json):
             with pd.ExcelWriter(excel_buffer, engine="openpyxl") as writer:
                 df.to_excel(writer, index=False, sheet_name="Project Estimation")
             excel_buffer.seek(0)
-
-            st.download_button(
-                label="Download Estimation as Excel",
-                data=excel_buffer,
-                file_name="project_estimation.xlsx",
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            )
             
             # Generate JSON download option
             json_data = json.dumps(tasks, indent=4)  # Convert tasks to formatted JSON
-            st.download_button(
-                label="Download Estimation as JSON",
-                data=json_data,
-                file_name="project_estimation.json",
-                mime="application/json",
-            )
+            
+            
+            ### DOWNLOAD BUTTONS
+            col1, col2 = st.columns(2)
+            with col1:
+                st.download_button(
+                    label="Download Estimation as Excel",
+                    data=excel_buffer,
+                    file_name="project_estimation.xlsx",
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                )
+            with col2:
+                st.download_button(
+                    label="Download Estimation as JSON",
+                    data=json_data,
+                    file_name="project_estimation.json",
+                    mime="application/json",
+                )
             
             
             # Export profiles to JSON
             profile_data = df["Profile"].to_json(index=False).encode("utf-8")
             st.download_button(
-                label="Download Profiles as JSON",
+                label="profiles.json",
                 data=profile_data,
                 file_name="profiles.json",
                 mime="application/json",
