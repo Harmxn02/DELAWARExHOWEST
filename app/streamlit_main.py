@@ -409,18 +409,16 @@ def parse_and_display_estimation(response_json):
 st.header("AI-Driven Project Estimation Tool")
 
 # Tabs for the interface
-tabs = st.tabs(["Estimation Tool", "Generated Prompt"])
+tabs = st.tabs(["PDF Document", "Prompt"])
 
 # Estimation Tool tab
 with tabs[0]:
-    st.subheader("Upload and Analyze Your Project PDF")
-
     # Initialize session state for PDF content
     if "pdf_content" not in st.session_state:
         st.session_state.pdf_content = None
 
     # File uploader
-    uploaded_file = st.file_uploader("Upload your project PDF", type=["pdf"])
+    uploaded_file = st.file_uploader("Upload a PDF document containing information about the project", type=["pdf"])
 
     # Additional requirements input
     user_prompt = st.text_area("Additional project requirements (optional):")
@@ -456,8 +454,6 @@ with tabs[0]:
 
 # Generated Prompt tab
 with tabs[1]:
-    st.header("AI Search & Task Estimator")
-
     user_prompt = st.text_area("Describe your project requirements:")
     if st.button("Generate Project Estimation", key="generate_button_1"):
         if user_prompt:
