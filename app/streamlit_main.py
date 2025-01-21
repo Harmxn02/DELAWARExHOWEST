@@ -177,8 +177,8 @@ def construct_estimation_prompt(search_results, user_prompt):
     with st.expander("View Top 5 Suggested Tasks"):
         tasks_json = [json.dumps(result, indent=4) for result in search_results]
         tasks_json_output = '[\n' + ',\n'.join(tasks_json) + '\n]'
-        st.text(tasks_json_output)  # Use st.text() to show the JSON within the collapsible section
-
+        st.json(tasks_json_output)
+        
     return f"""
     Context:
     The user has described their project as follows:
