@@ -95,13 +95,16 @@ def analyze_pdf(pdf_path_or_url, is_url=False):
 #endregion
 
 #region AI Search and Task Estimation
-def generate_search_query(pdf_content, user_prompt):
+def generate_search_query(user_prompt, pdf_content=None):
+    """
+    Generates a search query based on the user prompt and optional PDF content.
+    """
     openai_prompt = f"""
     Context:
-    You are helping to create a project timeline. The user has provided a PDF document with project details and additional requirements.
+    You are helping to create a project timeline. The user has provided details and additional requirements.
 
     PDF Content:
-    {pdf_content}
+    {pdf_content if pdf_content else "No PDF content provided."}
 
     Additional User Requirements:
     {user_prompt}
@@ -109,7 +112,7 @@ def generate_search_query(pdf_content, user_prompt):
     Instructions:
     - Write a query to search for tasks relevant to the described project.
     - The query should focus on finding tasks with clear roles, responsibilities, or descriptions relevant to the project.
-    - Consider both the PDF content and additional requirements when forming the query.
+    - Consider both the PDF content (if available) and additional requirements when forming the query.
     - Aim for tasks that are high-priority or foundational to the type of project described.
     - Keep the query concise but descriptive enough to retrieve meaningful results.
 
@@ -164,7 +167,7 @@ def query_azure_ai_search(generated_query):
         st.error(f"Error while querying Azure AI Search: {str(e)}")
         return None
 
-def construct_estimation_prompt(search_results, pdf_content, user_prompt):
+def construct_estimation_prompt(search_results, user_prompt):
     tasks = "\n\n".join([
         f"MSCW: {result['MSCW']}\nArea: {result['Area']}\nModule: {result['Module']}\nFeature: {result['Feature']}\nTask: {result['Task']}\nProfile: {result['Profile']}\nMinDays: {result.get('MinDays', 'N/A')}\nRealDays: {result.get('RealDays', 'N/A')}\nMaxDays: {result.get('MaxDays', 'N/A')}\n% Contingency: {result.get('Contingency', 'N/A')}\nEstimatedDays: {result.get('EstimatedDays', 'N/A')}\nEstimatedPrice: {result.get('EstimatedPrice', 'N/A')}\nPotential Issues: {', '.join(result.get('PotentialIssues', []))}" 
         for result in search_results
@@ -320,26 +323,62 @@ def parse_and_display_estimation(response_json):
 #region Streamlit UI
 st.header("AI-Driven Project Estimation Tool")
 
-# Initialize session state for PDF content
-if "pdf_content" not in st.session_state:
-    st.session_state.pdf_content = None
+# Tabs for the interface
+tabs = st.tabs(["Estimation Tool", "Generated Prompt"])
 
-# File uploader
-uploaded_file = st.file_uploader("Upload your project PDF", type=["pdf"])
+# Estimation Tool tab
+with tabs[0]:
+    st.subheader("Upload and Analyze Your Project PDF")
 
-# Additional requirements input
-user_prompt = st.text_area("Additional project requirements (optional):")
+    # Initialize session state for PDF content
+    if "pdf_content" not in st.session_state:
+        st.session_state.pdf_content = None
 
-if uploaded_file:
-    if st.session_state.pdf_content is None:
-        with st.spinner("Uploading and analyzing PDF..."):
-            pdf_url = upload_pdf_to_azure(uploaded_file)
-            if pdf_url:
-                st.session_state.pdf_content = analyze_pdf(pdf_url, is_url=True)
+    # File uploader
+    uploaded_file = st.file_uploader("Upload your project PDF", type=["pdf"])
 
-    if st.session_state.pdf_content and st.button("Generate Project Estimation"):
+    # Additional requirements input
+    user_prompt = st.text_area("Additional project requirements (optional):")
+
+    if uploaded_file:
+        if st.session_state.pdf_content is None:
+            with st.spinner("Uploading and analyzing PDF..."):
+                pdf_url = upload_pdf_to_azure(uploaded_file)
+                if pdf_url:
+                    st.session_state.pdf_content = analyze_pdf(pdf_url, is_url=True)
+
+        if st.session_state.pdf_content and st.button("Generate Project Estimation"):
+            with st.spinner("Generating query..."):
+                search_query = generate_search_query(user_prompt, pdf_content=st.session_state.pdf_content)
+
+            if search_query:
+                with st.spinner("Querying Azure AI Search..."):
+                    search_results = query_azure_ai_search(search_query)
+
+                if search_results:
+                    with st.spinner("Generating project estimation..."):
+                        estimation_prompt = construct_estimation_prompt(
+                            search_results,
+                            st.session_state.pdf_content,
+                            user_prompt
+                        )
+                        ai_response = ask_openai_for_estimation(estimation_prompt)
+
+                    if ai_response:
+                        st.session_state.generated_prompt = estimation_prompt  # Save the prompt for display in the second tab
+                        parse_and_display_estimation(ai_response)
+                    else:
+                        st.error("No response from OpenAI for estimation.")
+
+# Generated Prompt tab
+with tabs[1]:
+    st.header("AI Search & Task Estimator")
+
+    user_prompt = st.text_area("Describe your project requirements:")
+if st.button("Generate Project Estimation"):
+    if user_prompt:
         with st.spinner("Generating query..."):
-            search_query = generate_search_query(st.session_state.pdf_content, user_prompt)
+            search_query = generate_search_query(user_prompt)
 
         if search_query:
             with st.spinner("Querying Azure AI Search..."):
@@ -347,16 +386,10 @@ if uploaded_file:
 
             if search_results:
                 with st.spinner("Generating project estimation..."):
-                    estimation_prompt = construct_estimation_prompt(
-                        search_results,
-                        st.session_state.pdf_content,
-                        user_prompt
-                    )
+                    estimation_prompt = construct_estimation_prompt(search_results, user_prompt)
                     ai_response = ask_openai_for_estimation(estimation_prompt)
 
                 if ai_response:
                     parse_and_display_estimation(ai_response)
-                else:
-                    st.error("No response from OpenAI for estimation.")
-
 #endregion
+
