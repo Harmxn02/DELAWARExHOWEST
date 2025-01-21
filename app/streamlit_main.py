@@ -143,6 +143,16 @@ def generate_search_query(user_prompt, pdf_content=None):
         return None
 
 def query_azure_ai_search(generated_query):
+    """
+    Queries the Azure AI Search service with a generated query.
+    Args:
+        generated_query (str): The query string to search for.
+    Returns:
+        list: A list of search results if the query is successful.
+        None: If there is an error in querying the Azure AI Search service.
+    Raises:
+        Exception: If there is an error while making the request to the Azure AI Search service.
+    """
     headers = {
         "Content-Type": "application/json",
         "api-key": st.secrets["AZURE_SEARCH_API_KEY"],
@@ -168,6 +178,28 @@ def query_azure_ai_search(generated_query):
         return None
 
 def construct_estimation_prompt(search_results, user_prompt):
+    """
+    Constructs a detailed project estimation prompt based on search results and user input.
+    Args:
+        search_results (list): A list of dictionaries containing task details retrieved from a search.
+        user_prompt (str): The user's project description.
+    Returns:
+        str: A formatted string containing the project estimation prompt, including context, instructions, and task details.
+    The function performs the following steps:
+        1. Formats the search results into a structured string with task details.
+        2. Displays the top 5 suggested tasks in a collapsible section using Streamlit.
+        3. Constructs a detailed project estimation prompt with guidelines for creating new estimated tasks, including:
+            - Timeline for task completion.
+            - Identification of risks, delays, or dependencies.
+            - Estimated price and required resources or roles.
+            - Overall project duration calculation.
+        4. Provides a description of each task attribute and general pointers for creating the estimation.
+        5. Returns the prompt in a structured JSON format.
+    Note:
+        - The function uses Streamlit to display the top 5 suggested tasks.
+        - The function ensures the correct profiles and modules are used based on the task descriptions.
+        - The function calculates the estimated price based on the profile's daily rate and estimated days.
+    """
     tasks = "\n\n".join([
         f"MSCW: {result['MSCW']}\nArea: {result['Area']}\nModule: {result['Module']}\nFeature: {result['Feature']}\nTask: {result['Task']}\nProfile: {result['Profile']}\nMinDays: {result.get('MinDays', 'N/A')}\nRealDays: {result.get('RealDays', 'N/A')}\nMaxDays: {result.get('MaxDays', 'N/A')}\n% Contingency: {result.get('Contingency', 'N/A')}\nEstimatedDays: {result.get('EstimatedDays', 'N/A')}\nEstimatedPrice: {result.get('EstimatedPrice', 'N/A')}\nPotential Issues: {', '.join(result.get('PotentialIssues', []))}" 
         for result in search_results
@@ -254,6 +286,16 @@ def construct_estimation_prompt(search_results, user_prompt):
     """
 
 def ask_openai_for_estimation(prompt):
+    """
+    Sends a prompt to the OpenAI API and returns the estimated response.
+    Args:
+        prompt (str): The prompt to send to the OpenAI API for estimation.
+    Returns:
+        str: The estimated response from the OpenAI API if the request is successful.
+        None: If there is an error in the request or response.
+    Raises:
+        Exception: If an error occurs during the request to the OpenAI API.
+    """
     headers = {
         "Content-Type": "application/json",
         "api-key": st.secrets["OPENAI_API_KEY"],
@@ -279,6 +321,22 @@ def ask_openai_for_estimation(prompt):
         return None
 
 def parse_and_display_estimation(response_json):
+    """
+    Parses the estimation response JSON and displays the project estimation in a Streamlit app.
+    This function performs the following tasks:
+    1. Checks if the response JSON is empty and displays an error message if it is.
+    2. Parses the response JSON to extract tasks.
+    3. Checks if tasks are present in the parsed data and displays an error message if none are found.
+    4. Displays the project estimation title.
+    5. Displays the tasks in a DataFrame format.
+    6. Provides download options for the estimation as an Excel file and JSON file.
+    7. Exports profiles to a JSON file and provides a download button.
+    Args:
+        response_json (str): The JSON response containing the project estimation.
+    Raises:
+        json.JSONDecodeError: If there is an error decoding the JSON response.
+        Exception: If there is any other error while parsing the estimation response.
+    """
     try:
         # Check if response_json is empty
         if not response_json:
